@@ -45,7 +45,7 @@ knockoffs.g <- function(X) {
   smalls <- 2 * rep(1, p) * lambda_0
   S <- diag(smalls)
   C <- chol(2 * S - S * solve(sig, S))
-  U0 <- matrix(runif(n*p), ncol = p)
+  U0 <- matrix(rnorm(n*p), ncol = p)
   bigXXtilde <- cbind(X, U0)
   tilde.indices <- p + 1:p
   # bigGS <- gramschmidt(bigXXtilde, tilde.indices)
