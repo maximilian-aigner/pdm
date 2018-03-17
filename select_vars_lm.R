@@ -3,13 +3,13 @@ library(glmnet)
 library(MASS)
 library(corrplot)
 
-n <- 5000 # observations
-p <- 20   # variables available
-s <- 4    # non-nulls (simulation)
+n <- 500 # observations
+p <- 100   # variables available
+s <- floor(0.1*p)    # non-nulls (simulation)
 
 # generate data matrix
 sim.mu <- rep(0, p)
-# sim.sig <- matrix(.3, nrow = p, ncol = p) + diag(p) * .7
+# sim.sig <- matrix(.2, nrow = p, ncol = p) + diag(p) * .8
 sim.sig <- diag(p)
 X <- mvrnorm(n, mu = sim.mu, Sigma = sim.sig)
 

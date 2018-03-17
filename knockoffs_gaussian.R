@@ -40,21 +40,16 @@ knockoffs.g <- function(X) {
   sz <- dim(X)
   n <- sz[1]
   p <- sz[2]
-  # equicorrelated to start
+  # equicorrelated
   lambda_0 <- eigen(sig)$values[p]
-  smalls <- 2 * rep(1, p) * lambda_0
-  S <- diag(smalls)
-  C <- chol(2 * S - S * solve(sig, S))
-  U0 <- matrix(rnorm(n*p), ncol = p)
-  bigXXtilde <- cbind(X, U0)
-  tilde.indices <- p + 1:p
-  # bigGS <- gramschmidt(bigXXtilde, tilde.indices)
-  bigGS <- gramSchmidt(bigXXtilde)
-  bigGS <- bigGS$Q
-  # uindices <- p + 1:p
-  U <- bigGS[, tilde.indices]
+  print(paste("λ = ", lambda_0)) 
+  s <- 2 * rep(1, p) * lambda_0
+  S <- diag(s)
+  sig.inv <- solve(sig, S)
+  C <- chol(2 * S - S * sig.inv)
+  U <- matrix(rnorm(n*p), ncol = p)
   I = diag(1, p)
-  Xtilde <- X %*% (I - solve(sig, S)) + U %*% C
+  Xtilde <- X %*% (I - sig.inv) - U %*% C
   aug.X <- cbind(X, Xtilde)
   return(aug.X)
 }
