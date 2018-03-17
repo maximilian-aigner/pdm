@@ -1,6 +1,10 @@
 source('utils.R')
 library(pracma)
 
+orthog.basis <- function(X) {
+  
+}
+
 project <- function(u, v) {
   up <- (u %*% v)/(v %*% v);
   return(as.numeric(up))
@@ -40,14 +44,17 @@ knockoffs.g <- function(X) {
   sz <- dim(X)
   n <- sz[1]
   p <- sz[2]
+
   # equicorrelated
   lambda_0 <- eigen(sig)$values[p]
-  print(paste("λ = ", lambda_0)) 
+
   s <- 2 * rep(1, p) * lambda_0
   S <- diag(s)
   sig.inv <- solve(sig, S)
+
   C <- chol(2 * S - S * sig.inv)
   U <- matrix(rnorm(n*p), ncol = p)
+
   I = diag(1, p)
   Xtilde <- X %*% (I - sig.inv) - U %*% C
   aug.X <- cbind(X, Xtilde)
