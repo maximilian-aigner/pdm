@@ -32,6 +32,8 @@ vignettes/*.pdf
 *.utf8.md
 *.knit.md
 
-
-# Generated PDFs
+# Generated PDF files
 *.pdf
+
+# Vim swaps
+*.swp
