@@ -4,8 +4,8 @@ library(MASS)
 library(corrplot)
 
 n <- 3000 # observations
-p <- 1000   # variables available
-s <- 30   # non-nulls (simulation)
+p <- 100   # variables available
+s <- 15   # non-nulls (simulation)
 
 # generate data matrix
 sim.mu <- rep(0, p)
@@ -16,7 +16,7 @@ X <- scale(X)
 
 # generate Ys
 selected.vars <- sample(1:p, s, replace = FALSE)
-true.beta <- matrix(2*rep(1, s))
+true.beta <- matrix(1*rep(1, s))
 y <- mvrnorm(1, mu = X[, selected.vars] %*% true.beta, Sigma = diag(n))
 
 # fit lm to augmented data
@@ -34,4 +34,8 @@ dev.off()
 # pdf(file="var_corrs.pdf")
 # corrplot(cor(aug.X), method = "circle")
 # dev.off()
-# aug.fit <- lm(y ~ ., as.data.frame(aug.X))
+
+# compute threshold
+threshold <- knockoff.threshold(W, 0.1)
+falsely_discovered <- ((abs(W) > threshold) & (1:length(W) %in% selected.vars))
+empirical_fdr <- falsely_discovered / length(W)
