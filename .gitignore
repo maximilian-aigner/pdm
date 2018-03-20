@@ -37,3 +37,8 @@ vignettes/*.pdf
 
 # Vim swaps
 *.swp
+.Rproj.user
+
+# knockoff package source code
+/knockoff/
+.DS_Store

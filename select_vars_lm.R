@@ -3,27 +3,28 @@ library(glmnet)
 library(MASS)
 library(corrplot)
 
-n <- 500 # observations
-p <- 100   # variables available
-s <- floor(0.1*p)    # non-nulls (simulation)
+n <- 3000 # observations
+p <- 1000   # variables available
+s <- 30   # non-nulls (simulation)
 
 # generate data matrix
 sim.mu <- rep(0, p)
 # sim.sig <- matrix(.2, nrow = p, ncol = p) + diag(p) * .8
 sim.sig <- diag(p)
 X <- mvrnorm(n, mu = sim.mu, Sigma = sim.sig)
+X <- scale(X)
 
 # generate Ys
 selected.vars <- sample(1:p, s, replace = FALSE)
-true.beta <- matrix(5*rep(1, s))
-y <- X[, selected.vars] %*% true.beta
+true.beta <- matrix(3.5*rep(1, s))
+y <- mvrnorm(1, mu = X[, selected.vars] %*% true.beta, Sigma = diag(n))
 
 # fit lm to augmented data
 aug.X <- knockoffs.g(X)
 
-aug.reg.fit <- cv.glmnet(aug.X, y, alpha = 0)
-Z <- abs(coef(aug.reg.fit, lambda = aug.reg.fit$best.lambda))
-W <- Z[1:p] - Z[(p+1) : (2*p)]
+aug.reg.fit <- cv.glmnet(aug.X, y, alpha = 0, intercept = FALSE)
+Z <- coef(aug.reg.fit, lambda = aug.reg.fit$best.lambda)
+W <- abs(Z[2:(p+1)]) - abs(Z[(p+2) : (2*p+1)])
 
 pdf(file="var_check.pdf")
 plot(1:length(W), W)
