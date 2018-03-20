@@ -9,14 +9,14 @@ s <- 30   # non-nulls (simulation)
 
 # generate data matrix
 sim.mu <- rep(0, p)
-# sim.sig <- matrix(.2, nrow = p, ncol = p) + diag(p) * .8
-sim.sig <- diag(p)
+sim.sig <- matrix(.8, nrow = p, ncol = p) + diag(p) * .2
+#sim.sig <- diag(p)
 X <- mvrnorm(n, mu = sim.mu, Sigma = sim.sig)
 X <- scale(X)
 
 # generate Ys
 selected.vars <- sample(1:p, s, replace = FALSE)
-true.beta <- matrix(3.5*rep(1, s))
+true.beta <- matrix(2*rep(1, s))
 y <- mvrnorm(1, mu = X[, selected.vars] %*% true.beta, Sigma = diag(n))
 
 # fit lm to augmented data
@@ -31,7 +31,7 @@ plot(1:length(W), W)
 points(selected.vars, W[selected.vars], col = "red", pch = 3)
 dev.off()
 
-pdf(file="var_corrs.pdf")
-corrplot(cor(aug.X), method = "circle")
-dev.off()
+# pdf(file="var_corrs.pdf")
+# corrplot(cor(aug.X), method = "circle")
+# dev.off()
 # aug.fit <- lm(y ~ ., as.data.frame(aug.X))
