@@ -38,4 +38,5 @@ dev.off()
 # compute threshold
 threshold <- knockoff.threshold(W, 0.1)
 falsely_discovered <- ((abs(W) > threshold) & (1:length(W) %in% selected.vars))
-empirical_fdr <- falsely_discovered / length(W)
+empirical_fdr <- sum(falsely_discovered) / length(W)
+
