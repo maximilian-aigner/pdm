@@ -22,4 +22,4 @@ paste("-dl", paste(causal.genes, risk.alleles, heter.sizes, homoz.sizes, sep = "
 # POTENTIALLY: -t [file containing the set wanted SNP locations, one per line]
 
 # Now, use IMPUTE:
-# ../impute2 -h CEU.0908.chr22.hap -l CEU.0908.chr22.legend -m genetic_map_chr22_combined_b36.txt -g OUTPUT_HAPGEN2/chr22.out.cases.gen -int 20000000 25000000 -o OUTPUT_IMPUTE2/imputed.cases.results
+# ../impute2 -h CEU.0908.chr22.hap -l CEU.0908.chr22.legend -m genetic_map_chr22_combined_b36.txt -g OUTPUT_HAPGEN2/chr22.out.controls.gen -int 20000000 25000000 -o OUTPUT_IMPUTE2/imputed.controls.results
