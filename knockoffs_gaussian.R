@@ -1,9 +1,13 @@
 source('utils.R')
 library(pracma)
+library(corpcor)
 
-knockoffs.g <- function(X) {
+knockoffs.g <- function(X, shrinkage = FALSE) {
   mu <- colMeans(X)
-  sig <- cov(X)
+  if (shrinkage)
+    sig <- cov.shrink(X)
+  else 
+    sig <- cov(X)
   sz <- dim(X)
   n <- sz[1]
   p <- sz[2]
