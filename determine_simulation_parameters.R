@@ -3,7 +3,7 @@ set.seed(123)
 # choose 'causal' gene loci
 k = 10
 
-loci.df <- read.csv('~/src/pdm/datasim/CEU.0908.impute.files/CEU.0908.chr22.legend', header =TRUE, sep = ' ')
+loci.df <- read.csv('~/src/pdm/datasim/OUTPUT_IMPUTE2/imputed.controls.results', header =TRUE, sep = ' ')
 causal.genes <- sample(loci.df$pos, k, replace = FALSE)
 homoz.sizes <- round(runif(k, min = 1.25, max = 1.5), 4)
 heter.sizes <- round(runif(k, min = 1.25, max = 1.5), 4)
