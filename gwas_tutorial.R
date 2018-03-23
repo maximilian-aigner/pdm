@@ -1,6 +1,6 @@
 library(snpStats)
 
-dat <- read.impute("datasim/CEU.0908.impute.files/example.gen")
+dat <- read.impute("datasim/CEU.0908.impute.files/OUTPUT_IMPUTE2/imputed.cases.results")
 snpsum.col <- col.summary(dat)
 
 # thresholds for filtering
