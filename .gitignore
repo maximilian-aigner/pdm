@@ -42,3 +42,7 @@ vignettes/*.pdf
 # knockoff package source code
 /knockoff/
 .DS_Store
+
+# data files
+/datasim/CEU.0908.impute.files
+/datasim/OUTPUT_HAPGEN2
