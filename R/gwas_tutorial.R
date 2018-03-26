@@ -70,7 +70,7 @@ hmm = SNPknock.fp.loadFit(r_file, theta_file, alpha_file, X[1,])
 
 Xk = SNPknock.knockoffHMM(X, hmm$pInit, hmm$Q, hmm$pEmit)
 
-plot(colMeans(X),colMeans(Xk),col=rgb(0,0,0,alpha=0.1), pch=16,cex=1); abline(a=0, b=1, col='red', lty=2)
+plot(colMeans(X),colMeans(Xk),col = rgb(0,0,0,alpha = 0.1), pch=16,cex=1); abline(a=0, b=1, col='red', lty=2)
 
 library(knockoff)
 
@@ -81,11 +81,11 @@ Xk[ind.screen,] = X[ind.screen,]
 # W = stat.glmnet_coefdiff(X, Xk, phenotypes, family="binomial")
 W = stat.stability_selection(X, Xk, phenotypes)
 # plot(W, pch=16, cex=1)
-t = knockoff.threshold(W, fdr=0.1, offset=0)
+t = knockoff.threshold(W, fdr = 0.1, offset = 0)
 discoveries = which(W >= t)
 names(discoveries) = colnames(genotypes)[discoveries]
 print(discoveries)
 colors = rep("gray",length(W))
 colors[discoveries] = "blue"
-plot(W, col=colors, pch=16, cex=1); abline(h=t, lty=2)
+plot(W, col = colors, pch = 16, cex = 1); abline(h = t, lty = 2)
 

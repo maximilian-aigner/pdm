@@ -42,4 +42,44 @@ theta not set, so setting to a default value of 0.120972
 Processing disease loci ... done 
 
 
-Simulating haplotypes ... 
+Simulating haplotypes ... done
+
+Writing output to files 
+writing output file working_dataset/hapgen2/genetic_map_chr22_combined_b37.controls.haps
+writing output file working_dataset/hapgen2/genetic_map_chr22_combined_b37.cases.haps
+writing output file working_dataset/hapgen2/genetic_map_chr22_combined_b37.legend
+writing output file working_dataset/hapgen2/genetic_map_chr22_combined_b37.controls.gen
+writing output file working_dataset/hapgen2/genetic_map_chr22_combined_b37.cases.gen
+writing output file working_dataset/hapgen2/genetic_map_chr22_combined_b37.controls.sample
+writing output file working_dataset/hapgen2/genetic_map_chr22_combined_b37.cases.sample
+
+
+The pvalues and effect sizes of each disease SNP is:
+
+Disease_locus_index           beta        beta_se         pvalue
+            454              2.041          1.155        0.05313
+           2872             0.9223          1.414         0.5227
+           4083             0.5189         0.9129         0.5811
+           4557             0.2532        0.09269          0.159
+           5272              8.128          36.66          0.113
+           5504            0.09591        0.06921         0.6401
+           7873              8.128          36.66          0.113
+           8818             0.5081         0.2798         0.1025
+           8908             0.5189         0.9129         0.5811
+           9390             -6.289          36.66         0.4121
+
+
+The pvalue for the full disease model is 0.1948:
+Disease_locus_index           beta        beta_se
+            454              1.867           1.16
+           2872             0.9674          1.415
+           4083             0.5317         0.9161
+           4557             0.1906        0.09491
+           5272              39.59      3.154e+08
+           5504            0.02464        0.07079
+           7873              38.59       1.42e+08
+           8818             0.4117         0.2889
+           8908             0.6097         0.9149
+           9390             -61.13      3.215e+13
+
+HAPGEN took 86 seconds to complete. Have a nice day! 
