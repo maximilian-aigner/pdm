@@ -1,10 +1,12 @@
+#!/usr/bin/env Rscript
 set.seed(123)
-
+args = commandArgs(trailingOnly = TRUE)
 # choose 'causal' gene loci
 k = 10
 N = 10000
 
-loci.df <- read.csv('~/src/pdm/datasim/ALL_1000G_impute.nosingleton/ALL.chr22.integrated_phase1_v3.20101123.snps_indels_svs.genotypes.nosing.legend', header =TRUE, sep = ' ')
+legend_file <- args[1]
+loci.df <- read.csv(paste0('~/src/pdm/datasim/', legend_file), header = TRUE, sep = ' ')
 # lower.bound <- 0
 # upper.bound <- 51243297
 # bounded.loci <- loci.df[(loci.df$pos >= lower.bound) & (loci.df$pos <= upper.bound), ]
@@ -19,8 +21,10 @@ risk.alleles <- rep(1, k)
 #for(i in 1:length(causal.genes))
 #{
 #}
-paste0("-int ", paste(loc.interval, sep = " ", collapse = " "))
-paste("-dl", paste(causal.genes, risk.alleles, heter.sizes, homoz.sizes, sep = " ", collapse = " "))
+
+ints <- paste0("-int ", paste(loc.interval, sep = " ", collapse = " "))
+dls <- paste("-dl", paste(causal.genes, risk.alleles, heter.sizes, homoz.sizes, sep = " ", collapse = " "))
+print(paste(ints, dls, sep = " ", collapse = " "))
 
 # ./hapgen2 -m genetic_map_chr22_combined_b36.txt -l CEU.0908.chr22.legend \
 # -h CEU.0908.chr22.hap -o OUTPUT_HAPGEN2/chr22.out -n 50 50 \
