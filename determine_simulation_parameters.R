@@ -2,9 +2,15 @@ set.seed(123)
 
 # choose 'causal' gene loci
 k = 10
+N = 10000
 
 loci.df <- read.csv('~/src/pdm/datasim/ALL_1000G_impute.nosingleton/ALL.chr22.integrated_phase1_v3.20101123.snps_indels_svs.genotypes.nosing.legend', header =TRUE, sep = ' ')
-causal.genes <- sample(loci.df$pos, k, replace = FALSE)
+# lower.bound <- 0
+# upper.bound <- 51243297
+# bounded.loci <- loci.df[(loci.df$pos >= lower.bound) & (loci.df$pos <= upper.bound), ]
+bounded.loci <- loci.df[1:N, ]
+causal.genes <- sample(bounded.loci$pos, k, replace = FALSE)
+loc.interval <- c(min(bounded.loci$pos), max(bounded.loci$pos)) # might be narrow than (lower, upper)
 homoz.sizes <- round(runif(k, min = 1.25, max = 1.5), 4)
 heter.sizes <- round(runif(k, min = 1.25, max = 1.5), 4)
 risk.alleles <- rep(1, k)
@@ -13,6 +19,7 @@ risk.alleles <- rep(1, k)
 #for(i in 1:length(causal.genes))
 #{
 #}
+paste0("-int ", paste(loc.interval, sep = " ", collapse = " "))
 paste("-dl", paste(causal.genes, risk.alleles, heter.sizes, homoz.sizes, sep = " ", collapse = " "))
 
 # ./hapgen2 -m genetic_map_chr22_combined_b36.txt -l CEU.0908.chr22.legend \
