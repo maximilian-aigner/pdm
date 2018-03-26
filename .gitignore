@@ -44,5 +44,4 @@ vignettes/*.pdf
 .DS_Store
 
 # data files
-/datasim/CEU.0908.impute.files
-/datasim/OUTPUT_HAPGEN2
+/datasim/

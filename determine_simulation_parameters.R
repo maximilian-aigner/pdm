@@ -3,7 +3,7 @@ set.seed(123)
 # choose 'causal' gene loci
 k = 10
 
-loci.df <- read.csv('~/src/pdm/datasim/OUTPUT_IMPUTE2/imputed.controls.results', header =TRUE, sep = ' ')
+loci.df <- read.csv('~/src/pdm/datasim/ALL_1000G_impute.nosingleton/ALL.chr22.integrated_phase1_v3.20101123.snps_indels_svs.genotypes.nosing.legend', header =TRUE, sep = ' ')
 causal.genes <- sample(loci.df$pos, k, replace = FALSE)
 homoz.sizes <- round(runif(k, min = 1.25, max = 1.5), 4)
 heter.sizes <- round(runif(k, min = 1.25, max = 1.5), 4)
@@ -21,5 +21,5 @@ paste("-dl", paste(causal.genes, risk.alleles, heter.sizes, homoz.sizes, sep = "
 # -dl 16042533 1 1.4386 1.4163 29977662 1 1.4073 1.2737 42519023 1 1.4275 1.346 18716857 1 1.2502 1.3186 34152478 1 1.3688 1.4537 21692266 1 1.305 1.3621 18914875 1 1.345 1.4525 40915268 1 1.4032 1.4531 45898329 1 1.3379 1.4486 27596224 1 1.2778 1.36
 # POTENTIALLY: -t [file containing the set wanted SNP locations, one per line]
 
-# Now, use IMPUTE:
+# Now, use IMPUTE (DO WE EVEN NEED THIS? — YES)
 # ../impute2 -h CEU.0908.chr22.hap -l CEU.0908.chr22.legend -m genetic_map_chr22_combined_b36.txt -g OUTPUT_HAPGEN2/chr22.out.controls.gen -int 20000000 25000000 -o OUTPUT_IMPUTE2/imputed.controls.results
