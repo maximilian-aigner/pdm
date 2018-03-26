@@ -40,8 +40,11 @@ vignettes/*.pdf
 .Rproj.user
 
 # knockoff package source code
-/knockoff/
+# /knockoff/
+
+# OS X Finder cache files
 .DS_Store
 
 # data files
-/datasim/
+/datasim/old
+/datasim/1000G/*
