@@ -24,7 +24,7 @@ risk.alleles <- rep(1, k)
 
 ints <- paste0("-int ", paste(loc.interval, sep = " ", collapse = " "))
 dls <- paste("-dl", paste(causal.genes, risk.alleles, heter.sizes, homoz.sizes, sep = " ", collapse = " "))
-print(paste(ints, dls, sep = " ", collapse = " "))
+cat(paste(ints, dls, sep = " ", collapse = " "))
 
 # ./hapgen2 -m genetic_map_chr22_combined_b36.txt -l CEU.0908.chr22.legend \
 # -h CEU.0908.chr22.hap -o OUTPUT_HAPGEN2/chr22.out -n 50 50 \

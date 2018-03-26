@@ -1,7 +1,7 @@
 library(snpStats)
 
-dat.cases <- read.impute("datasim/OUTPUT_IMPUTE2/imputed.cases.results")
-dat.contr <- read.impute("datasim/OUTPUT_IMPUTE2/imputed.controls.results")
+dat.cases <- read.impute("../datasim/working_dataset/imputed.cases.results")
+dat.contr <- read.impute("../datasim/working_dataset/OUTPUT_IMPUTE2/imputed.controls.results")
 row.names(dat.cases) = sapply(1:dim(dat.cases)[1], function(i) paste("Case",i,sep=""))
 row.names(dat.contr) = sapply(1:dim(dat.contr)[1], function(i) paste("Control",i,sep=""))
 genotypes = rbind(dat.contr, dat.cases)
