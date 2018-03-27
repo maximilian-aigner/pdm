@@ -13,8 +13,8 @@ loci.df <- read.csv(paste0('~/src/pdm/datasim/', legend_file), header = TRUE, se
 bounded.loci <- loci.df[1:N, ]
 causal.genes <- sample(bounded.loci$pos, k, replace = FALSE)
 loc.interval <- c(min(bounded.loci$pos), max(bounded.loci$pos)) # might be narrow than (lower, upper)
-homoz.sizes <- round(runif(k, min = 1.25, max = 1.5), 4)
 heter.sizes <- round(runif(k, min = 1.25, max = 1.5), 4)
+homoz.sizes <- heter.sizes + round(runif(k, min = 1.25, max = 1.5), 4)
 risk.alleles <- rep(1, k)
 
 # output argument string
