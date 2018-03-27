@@ -1,7 +1,8 @@
 library(snpStats)
 
-dat.cases <- read.impute("datasim/working_dataset/hapgen2/genetic_map_chr22_combined_b37.cases.gen", nsnp = 2000)
-dat.contr <- read.impute("datasim/working_dataset/hapgen2/genetic_map_chr22_combined_b37.controls.gen", nsnp = 2000)
+Nsnp <- 8000
+dat.cases <- read.impute("datasim/working_dataset/hapgen2/genetic_map_chr22_combined_b37.cases.gen", nsnp = Nsnp)
+dat.contr <- read.impute("datasim/working_dataset/hapgen2/genetic_map_chr22_combined_b37.controls.gen", nsnp = Nsnp)
 row.names(dat.cases) = sapply(1:dim(dat.cases)[1], function(i) paste("Case",i,sep=""))
 row.names(dat.contr) = sapply(1:dim(dat.contr)[1], function(i) paste("Control",i,sep=""))
 genotypes = rbind(dat.contr, dat.cases)
@@ -78,8 +79,8 @@ Xk[ind.screen,] = X[ind.screen,]
 # this yields NAs because some columns (e.g. Xk[, 181] are all 0)
 
 
-# W = stat.glmnet_coefdiff(X, Xk, phenotypes, family="binomial")
-W = stat.stability_selection(X, Xk, phenotypes)
+W = stat.glmnet_coefdiff(X, Xk, phenotypes, family="binomial")
+#W = stat.stability_selection(X, Xk, phenotypes)
 # plot(W, pch=16, cex=1)
 t = knockoff.threshold(W, fdr = 0.1, offset = 0)
 discoveries = which(W >= t)
