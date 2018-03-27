@@ -138,3 +138,30 @@ For optimal results, each successive panel (0,1,2) should contain a subset of th
 RESETTING PARAMETERS FOR "SURROGATE FAMILY" MODELING
 -setting mutation matrices
 -setting switch rates
+
+diploid sampling success rate: 0.998
+
+haploid sampling success rate: (no haploid sampling performed)
+
+
+--------------------------------
+ Imputation accuracy assessment 
+--------------------------------
+
+The table below is based on an internal cross-validation that is performed during each IMPUTE2 run. For this analysis, the program masks the genotypes of one variant at a time in the study data (Panel 2) and imputes the masked genotypes by using the remaining study and reference data. The imputed genotypes are then compared with the original genotypes to produce the concordance statistics shown in the table. You can learn more about this procedure and the contents of the table at http://mathgen.stats.ox.ac.uk/impute/concordance_table_description.html.
+
+In the current analysis, IMPUTE2 masked, imputed, and evaluated 2497250 genotypes that were called with high confidence (maximum probability >= 0.90) in the Panel 2 input file (-g or -known_haps_g).
+
+When the masked study genotypes were imputed with reference data from Panel 0, the concordance between original and imputed genotypes was as follows:
+
+  Interval  #Genotypes %Concordance         Interval  %Called %Concordance
+  [0.0-0.1]          0          0.0         [ >= 0.0]   100.0         99.9
+  [0.1-0.2]          0          0.0         [ >= 0.1]   100.0         99.9
+  [0.2-0.3]          0          0.0         [ >= 0.2]   100.0         99.9
+  [0.3-0.4]          5         60.0         [ >= 0.3]   100.0         99.9
+  [0.4-0.5]        108         52.8         [ >= 0.4]   100.0         99.9
+  [0.5-0.6]       1795         53.9         [ >= 0.5]   100.0         99.9
+  [0.6-0.7]       1973         70.8         [ >= 0.6]    99.9         99.9
+  [0.7-0.8]       2934         81.0         [ >= 0.7]    99.8         99.9
+  [0.8-0.9]       4237         92.4         [ >= 0.8]    99.7         99.9
+  [0.9-1.0]    2486198        100.0         [ >= 0.9]    99.6        100.0
