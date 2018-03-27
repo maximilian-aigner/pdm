@@ -1,7 +1,7 @@
 library(snpStats)
 
-dat.cases <- read.impute("datasim/working_dataset/hapgen2/genetic_map_chr22_combined_b37.cases.gen", snpcol = 2)
-dat.contr <- read.impute("datasim/working_dataset/hapgen2/genetic_map_chr22_combined_b37.controls.gen", snpcol = 2)
+dat.cases <- read.impute("datasim/working_dataset/hapgen2/genetic_map_chr22_combined_b37.cases.gen", nsnp = 2000)
+dat.contr <- read.impute("datasim/working_dataset/hapgen2/genetic_map_chr22_combined_b37.controls.gen", nsnp = 2000)
 row.names(dat.cases) = sapply(1:dim(dat.cases)[1], function(i) paste("Case",i,sep=""))
 row.names(dat.contr) = sapply(1:dim(dat.contr)[1], function(i) paste("Control",i,sep=""))
 genotypes = rbind(dat.contr, dat.cases)

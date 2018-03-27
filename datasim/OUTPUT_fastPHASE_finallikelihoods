@@ -1,0 +1,2 @@
+./datasim/fastPHASE -Pp -T1 -K8 -g -H-4 -C10 -S1 -o/Users/maxim/src/pdm/datasim/OUTPUT_fastPHASE /var/folders/r9/w7ytk81s5xlf7qx5w3_l3dx40000gn/T//RtmpkteSF3/filef952408b0a4.inp 
+1	-10483.410363
