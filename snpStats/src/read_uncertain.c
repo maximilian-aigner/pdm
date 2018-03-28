@@ -7,7 +7,7 @@
 #include "uncertain.h"
 #include "zlib.h"
 
-#define BUFFERSIZE 8096
+#define BUFFERSIZE 32768
 /* wc function */
 
 void gzwc(const gzFile infile, const int nline, 
@@ -40,8 +40,10 @@ void gznext(const gzFile infile, char *buffer, const int len) {
   while (isspace(ch=gzgetc(infile))){} /* Skip leading white space */
   int i = 0, maxi = len-2;
   do {
-    if (i>maxi)
+    if (i>maxi) {
+      Rprintf("error: tried to read %d bytes into buffer of size %d\n", i, maxi);
       error("input field exceeds buffer length");
+    }
     buffer[i] = ch;
     i++;
   } while (!(isspace(ch=gzgetc(infile))));

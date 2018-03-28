@@ -1,7 +1,7 @@
 #!/bin/bash
 
 n_active_genes=10
-n_snps=10000
+n_snps=99999
 n_controls=50
 n_cases=50
 
@@ -9,19 +9,20 @@ n_cases=50
 
 # ----
 # EDIT THESE:
-files_dir=1000G/phaseI_b37_no_singletons
-fname_m=$files_dir/genetic_map_chr22_combined_b37.txt
-imputed_name=ALL.chr22.integrated_phase1_v3.20101123.snps_indels_svs.genotypes.nosing
+files_dir=hapmap3_r2_b36
+fname_m=$files_dir/genetic_map_chr22_combined_b36.txt
+imputed_name=hapmap3_r2_b36_chr22
 # ----
 
 # These should not need editing, but sometimes the extension is different
 fname_l=$files_dir/$imputed_name.legend # .legend file
-fname_h=$files_dir/$imputed_name.haplotypes # .hap/.haplotype file
+fname_h=$files_dir/$imputed_name.haps # .hap/.haplotype file
 
 output_dir=working_dataset
 output_file=$(basename "$fname_m" .txt)
 
-Rcall_args=`Rscript --vanilla ../R/determine_simulation_parameters.R $fname_l`
+Rcall_args=`Rscript --vanilla ../R/determine_simulation_parameters.R $fname_l $n_snps`
+echo $Rcall_args
 
 # build HAPGEN2 command string
 hapgen2_call_str="./hapgen2 -m $fname_m -l $fname_l -h $fname_h -o $output_dir/hapgen2/$output_file -n $n_controls $n_cases $Rcall_args"

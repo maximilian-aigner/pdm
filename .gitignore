@@ -48,3 +48,4 @@ vignettes/*.pdf
 # data files
 /datasim/old
 /datasim/1000G/*
+/datasim/hapmap3_r2_b36/*

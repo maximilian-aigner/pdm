@@ -3,15 +3,17 @@ set.seed(123)
 args = commandArgs(trailingOnly = TRUE)
 # choose 'causal' gene loci
 k = 10
-N = 10000
+# N = 100000
 
 legend_file <- args[1]
+N <- args[2]
 loci.df <- read.csv(paste0('~/src/pdm/datasim/', legend_file), header = TRUE, sep = ' ')
 # lower.bound <- 0
 # upper.bound <- 51243297
 # bounded.loci <- loci.df[(loci.df$pos >= lower.bound) & (loci.df$pos <= upper.bound), ]
 # bounded.loci <- loci.df[order(pos), ]
 # bounded.loci <- bounded.loci[1:N, ]
+# print(nrow(loci.df))
 bounded.loci <- head(sort(loci.df$pos, decreasing = FALSE), n = N)
 causal.genes <- sample(bounded.loci, k, replace = FALSE)
 loc.interval <- c(min(bounded.loci), max(bounded.loci)) # might be narrow than (lower, upper)

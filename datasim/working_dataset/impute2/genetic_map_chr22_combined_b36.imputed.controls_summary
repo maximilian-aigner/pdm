@@ -1,0 +1,17 @@
+
+======================
+ IMPUTE version 2.3.2 
+======================
+
+Copyright 2008 Bryan Howie, Peter Donnelly, and Jonathan Marchini
+Please see the LICENCE file included with this program for conditions of use.
+
+The seed for the random number generator is 1335111268.
+
+Command-line input: ./impute2 -h hapmap3_r2_b36/hapmap3_r2_b36_chr22.haps -l hapmap3_r2_b36/hapmap3_r2_b36_chr22.legend -m hapmap3_r2_b36/genetic_map_chr22_combined_b36.txt -g working_dataset/hapgen2/genetic_map_chr22_combined_b36.controls.gen -o working_dataset/impute2/genetic_map_chr22_combined_b36.imputed.controls -int 14550436 49565872
+
+ERROR: The analysis interval you specified via the -int argument is longer than 7 Mb (including the buffer region that IMPUTE2 automatically appends to each side of the interval). By default, IMPUTE2 will not allow you to analyze a large genomic region in a single run because its model approximation becomes less effective over large distances, which can lead to less accurate results.
+
+Instead of analyzing large regions (e.g., whole chromosomes) in a single IMPUTE2 run, we recommend that you break each chromosome into non-overlapping chunks of ~5 Mb for analysis. IMPUTE2 has a number of command-line options to make this more convenient, and we explain how to use them in the section called 'Analyzing whole chromosomes' on the IMPUTE2 website. Please contact the authors if you need help with this.
+
+If you know what you are doing or have consulted with us, it is sometimes okay to use regions longer than 7 Mb. To do this, you should include the -allow_large_regions flag in your command-line call to IMPUTE2.
