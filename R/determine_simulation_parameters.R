@@ -14,9 +14,11 @@ loci.df <- read.csv(paste0('~/src/pdm/datasim/', legend_file), header = TRUE, se
 # bounded.loci <- loci.df[order(pos), ]
 # bounded.loci <- bounded.loci[1:N, ]
 # print(nrow(loci.df))
-bounded.loci <- head(sort(loci.df$pos, decreasing = FALSE), n = N)
-causal.genes <- sample(bounded.loci, k, replace = FALSE)
-loc.interval <- c(min(bounded.loci), max(bounded.loci)) # might be narrow than (lower, upper)
+
+bounded <- head(loci.df[order(loci.df$position), ], n = N)
+causal.genes <- sample(1:nrow(bounded), k, replace = FALSE) #bounded, k, replace = FALSE)
+causal.genes.loci <- bounded[causal.genes, ]$position
+loc.interval <- c(min(bounded$position), max(bounded$position)) # might be narrow than (lower, upper)
 heter.sizes <- round(runif(k, min = 1.25, max = 1.5), 4)
 homoz.sizes <- heter.sizes + round(runif(k, min = 1.25, max = 1.5), 4)
 # risk.alleles <- rep(1, k)
@@ -28,8 +30,13 @@ risk.alleles <- sample(c(0, 1), replace = TRUE, size = k)
 #}
 
 ints <- paste0("-int ", paste(loc.interval, sep = " ", collapse = " "))
-dls <- paste("-dl", paste(causal.genes, risk.alleles, heter.sizes, homoz.sizes, sep = " ", collapse = " "))
+dls <- paste("-dl", paste(causal.genes.loci, risk.alleles, heter.sizes, homoz.sizes, sep = " ", collapse = " "))
 cat(paste(ints, dls, sep = " ", collapse = " "))
+
+all.indices <- 1:nrow(bounded)
+output.df <- cbind(all.indices[causal.genes], bounded[causal.genes, ], heter.sizes, homoz.sizes)
+# write
+write.table(output.df, "~/src/pdm/datasim/working_dataset/active_genes.txt", quote = FALSE, row.names = FALSE)
 
 # ./hapgen2 -m genetic_map_chr22_combined_b36.txt -l CEU.0908.chr22.legend \
 # -h CEU.0908.chr22.hap -o OUTPUT_HAPGEN2/chr22.out -n 50 50 \

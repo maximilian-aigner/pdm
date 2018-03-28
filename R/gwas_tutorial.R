@@ -79,8 +79,9 @@ Xk[ind.screen,] = X[ind.screen,]
 # this yields NAs because some columns (e.g. Xk[, 181] are all 0)
 
 
-W = stat.glmnet_coefdiff(X, Xk, phenotypes, family="binomial")
-#W = stat.stability_selection(X, Xk, phenotypes)
+# W = stat.glmnet_coefdiff(X, Xk, phenotypes, family="binomial")
+# W = stat.stability_selection(X, Xk, phenotypes)
+W = stat.random_forest(X, Xk, phenotypes)
 # plot(W, pch=16, cex=1)
 t = knockoff.threshold(W, fdr = 0.1, offset = 0)
 discoveries = which(W >= t)
@@ -88,5 +89,27 @@ names(discoveries) = colnames(genotypes)[discoveries]
 print(discoveries)
 colors = rep("gray",length(W))
 colors[discoveries] = "blue"
-plot(W, col = colors, pch = 16, cex = 1); abline(h = t, lty = 2)
+#plot(W, col = colors, pch = 16, cex = 1); abline(h = t, lty = 2)
 
+real <- read.table("datasim/working_dataset/active_genes.txt", header = TRUE)
+print(real)
+
+signals = sapply(1:length(real$rsID), function(i) clusters[which(names(clusters)==real$rsID[i])])
+print(signals)
+
+colors = rep("gray",length(W))
+colors[discoveries] = "red"
+colors[signals] = "green"
+plot(W, col=colors, pch=16, cex=1); abline(h=t, lty=2)
+
+true.discoveries = intersect(discoveries, signals)
+false.discoveries = setdiff(discoveries, signals)
+fdp = length(false.discoveries) / length(discoveries)  
+print(fdp) # False discovery proporion
+
+
+pvals = p.value(single.snp.tests(phenotypes, snp.data = genotypes), df=1)
+plot(-log10(pvals), col=rgb(0,0,0,alpha=0.25), pch=16,cex=1)
+
+pvals.BH = p.adjust(pvals, method = "BH")
+plot(-log10(pvals.BH), col=rgb(0,0,0,alpha=0.25), pch=16,cex=1,ylim=c(0, 1)); abline(h=-log10(0.1), lty=2)
