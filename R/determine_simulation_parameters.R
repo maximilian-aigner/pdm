@@ -10,12 +10,15 @@ loci.df <- read.csv(paste0('~/src/pdm/datasim/', legend_file), header = TRUE, se
 # lower.bound <- 0
 # upper.bound <- 51243297
 # bounded.loci <- loci.df[(loci.df$pos >= lower.bound) & (loci.df$pos <= upper.bound), ]
-bounded.loci <- loci.df[1:N, ]
-causal.genes <- sample(bounded.loci$pos, k, replace = FALSE)
-loc.interval <- c(min(bounded.loci$pos), max(bounded.loci$pos)) # might be narrow than (lower, upper)
+# bounded.loci <- loci.df[order(pos), ]
+# bounded.loci <- bounded.loci[1:N, ]
+bounded.loci <- head(sort(loci.df$pos, decreasing = FALSE), n = N)
+causal.genes <- sample(bounded.loci, k, replace = FALSE)
+loc.interval <- c(min(bounded.loci), max(bounded.loci)) # might be narrow than (lower, upper)
 heter.sizes <- round(runif(k, min = 1.25, max = 1.5), 4)
 homoz.sizes <- heter.sizes + round(runif(k, min = 1.25, max = 1.5), 4)
-risk.alleles <- rep(1, k)
+# risk.alleles <- rep(1, k)
+risk.alleles <- sample(c(0, 1), replace = TRUE, size = k)
 
 # output argument string
 #for(i in 1:length(causal.genes))

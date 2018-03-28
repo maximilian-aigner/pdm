@@ -6,7 +6,7 @@
 Copyright 2008 Bryan Howie, Peter Donnelly, and Jonathan Marchini
 Please see the LICENCE file included with this program for conditions of use.
 
-The seed for the random number generator is 1725843240.
+The seed for the random number generator is 415869210.
 
 Command-line input: ./impute2 -h 1000G/phaseI_b37_no_singletons/ALL.chr22.integrated_phase1_v3.20101123.snps_indels_svs.genotypes.nosing.haplotypes -l 1000G/phaseI_b37_no_singletons/ALL.chr22.integrated_phase1_v3.20101123.snps_indels_svs.genotypes.nosing.legend -m 1000G/phaseI_b37_no_singletons/genetic_map_chr22_combined_b37.txt -g working_dataset/hapgen2/genetic_map_chr22_combined_b37.cases.gen -o working_dataset/impute2/genetic_map_chr22_combined_b37.imputed.cases -int 16050408 17844897
 
@@ -158,10 +158,10 @@ When the masked study genotypes were imputed with reference data from Panel 0, t
   [0.0-0.1]          0          0.0         [ >= 0.0]   100.0         99.9
   [0.1-0.2]          0          0.0         [ >= 0.1]   100.0         99.9
   [0.2-0.3]          0          0.0         [ >= 0.2]   100.0         99.9
-  [0.3-0.4]          1          0.0         [ >= 0.3]   100.0         99.9
-  [0.4-0.5]         30         56.7         [ >= 0.4]   100.0         99.9
-  [0.5-0.6]        328         60.4         [ >= 0.5]   100.0         99.9
-  [0.6-0.7]        402         81.6         [ >= 0.6]    99.9         99.9
-  [0.7-0.8]        545         88.1         [ >= 0.7]    99.8        100.0
-  [0.8-0.9]        766         94.5         [ >= 0.8]    99.7        100.0
-  [0.9-1.0]     497378        100.0         [ >= 0.9]    99.6        100.0
+  [0.3-0.4]          0          0.0         [ >= 0.3]   100.0         99.9
+  [0.4-0.5]         26         42.3         [ >= 0.4]   100.0         99.9
+  [0.5-0.6]        363         57.3         [ >= 0.5]   100.0         99.9
+  [0.6-0.7]        411         68.9         [ >= 0.6]    99.9         99.9
+  [0.7-0.8]        571         79.9         [ >= 0.7]    99.8         99.9
+  [0.8-0.9]        891         93.5         [ >= 0.8]    99.7        100.0
+  [0.9-1.0]     497188        100.0         [ >= 0.9]    99.5        100.0
