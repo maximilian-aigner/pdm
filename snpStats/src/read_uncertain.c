@@ -7,7 +7,7 @@
 #include "uncertain.h"
 #include "zlib.h"
 
-#define BUFFERSIZE 32768
+#define BUFFERSIZE 2097152
 /* wc function */
 
 void gzwc(const gzFile infile, const int nline, 
