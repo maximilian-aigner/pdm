@@ -2,8 +2,8 @@
 
 n_active_genes=10
 n_snps=99999
-n_controls=100
-n_cases=100
+n_controls=50
+n_cases=50
 
 # set up various paths
 
@@ -19,7 +19,8 @@ fname_l=$files_dir/$imputed_name.legend # .legend file
 fname_h=$files_dir/$imputed_name.haps # .hap/.haplotype file
 
 output_dir=working_dataset
-output_file=$(basename "$fname_m" .txt)
+# output_file=$(basename "$fname_m" .txt)
+output_file=generated_output
 
 Rcall_args=`Rscript --vanilla ../R/determine_simulation_parameters.R $fname_l $n_snps`
 echo $Rcall_args
