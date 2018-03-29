@@ -111,7 +111,11 @@ stat.glmnet_coefdiff <- function(X, X_k, y, family='gaussian', cores=2, ...) {
   # Compute statistics
   Z = cv_coeffs_glmnet(cbind(X, X_k), y, family=family, parallel=parallel, ...)
   p = ncol(X)
+  colSD <- apply(cbind(X, X_k), 2, sd)
   orig = 1:p
+  # print(length(Z))
+  # print(length(colVars))
+  Z <- Z * colSD
   abs(Z[orig]) - abs(Z[orig+p])
 }
 
