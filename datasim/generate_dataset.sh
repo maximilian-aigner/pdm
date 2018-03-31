@@ -1,7 +1,7 @@
 #!/bin/bash
 
 n_active_genes=10
-n_snps=99999
+n_snps=9999999
 n_controls=50
 n_cases=50
 
@@ -35,11 +35,11 @@ hapgen2_call=eval $hapgen2_call_str
 just_intervals="-$(cut -d'-' -f2 <<<$Rcall_args)"
 echo $just_intervals
 
-impute2_call_str="./impute2 -h $fname_h -l $fname_l -m $fname_m -g $output_dir/hapgen2/$output_file.controls.gen -o $output_dir/impute2/$output_file.imputed.controls $just_intervals"
-echo $impute2_call_str
-impute2_call=eval $impute2_call_str
+impute_general_call="./impute2 -h $fname_h -l $fname_l -m $fname_m -g $just_intervals -allow_large_regions" 
+impute_call_control_str="$impute_general_call -g $output_dir/hapgen2/$output_file.controls.gen -o $output_dir/impute2/$output_file.imputed.controls"
+echo $impute_call_control_str
+impute_call_control=eval $impute_call_control_str
 
-impute2_call_str2="./impute2 -h $fname_h -l $fname_l -m $fname_m -g $output_dir/hapgen2/$output_file.cases.gen -o $output_dir/impute2/$output_file.imputed.cases $just_intervals"
-echo $impute2_call_str2
-impute2_call2=eval $impute2_call_str2
-
+impute_call_cases_str="$impute_general_call -g $output_dir/hapgen2/$output_file.cases.gen -o $output_dir/impute2/$output_file.imputed.cases"
+echo $impute_call_cases_str
+impute_call_cases=eval $impute_call_cases_str
