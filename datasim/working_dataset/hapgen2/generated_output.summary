@@ -5,7 +5,7 @@
 ===================================================================
 
 Command line input is:
-./hapgen2 -m hapmap3_r2_b36/genetic_map_chr22_combined_b36.txt -l hapmap3_r2_b36/hapmap3_r2_b36_chr22.legend -h hapmap3_r2_b36/hapmap3_r2_b36_chr22.haps -o working_dataset/hapgen2/generated_output -n 50 50 -int 14550436 49565872 -dl 25970853 1 1.4892 2.9616 43535877 1 1.3633 2.7865 30830710 1 1.4194 2.8295 46424553 1 1.3932 2.8918 47746576 0 1.2757 2.6896 16926611 0 1.475 2.9021 34047246 1 1.3115 2.6975 46658741 0 1.2605 2.659 34946146 0 1.332 2.6543 32064105 0 1.4886 2.7754 
+./hapgen2 -m hapmap3_r2_b36/genetic_map_chr22_combined_b36.txt -l hapmap3_r2_b36/hapmap3_r2_b36_chr22.legend -h hapmap3_r2_b36/hapmap3_r2_b36_chr22.haps -o working_dataset/hapgen2/generated_output -n 100 50 -int 14550436 49565872 -dl 25970853 1 1.4892 2.9616 43535877 1 1.3633 2.7865 30830710 1 1.4194 2.8295 46424553 1 1.3932 2.8918 47746576 0 1.2757 2.6896 16926611 0 1.475 2.9021 34047246 1 1.3115 2.6975 46658741 0 1.2605 2.659 34946146 0 1.332 2.6543 32064105 0 1.4886 2.7754 
 
 FILE INPUTS
                                             haplotype file: hapmap3_r2_b36/hapmap3_r2_b36_chr22.haps
@@ -16,7 +16,7 @@ FILE OUTPUTS
                                                output file: working_dataset/hapgen2/generated_output
                                               summary file: working_dataset/hapgen2/generated_output.summary
 PARAMETER INPUTS
-                                  no. controls to simulate: 50
+                                  no. controls to simulate: 100
                                      no. cases to simulate: 50
                                               disease loci: (1) 16926611 (2) 25970853 (3) 30830710 (4) 32064105 (5) 34047246 (6) 34946146 (7) 43535877 (8) 46424553 (9) 46658741 (10) 47746576 
                                            disease alleles: (1) 0 (2) 1 (3) 1 (4) 0 (5) 1 (6) 0 (7) 1 (8) 1 (9) 0 (10) 0 
@@ -36,7 +36,7 @@ Reading haplotype and legend files: looking for SNPs in [14550436, 49565872] ...
                                 number of SNPs in interval: 20084
 
 
-Random seed set to 0.901304
+Random seed set to 0.584061
 theta not set, so setting to a default value of 0.12211
 
 Processing disease loci ... done 
@@ -57,29 +57,29 @@ writing output file working_dataset/hapgen2/generated_output.cases.sample
 The pvalues and effect sizes of each disease SNP is:
 
 Disease_locus_index           beta        beta_se         pvalue
-            914             -1.314         0.7671        0.05837
-           5775               0.48          0.206        0.09128
-           8213             0.2858         0.1055         0.5927
-           9166            -0.3796         0.1049         0.5374
-          10603            0.06949         0.1769         0.7918
-          11070              -0.77         0.1094        0.05469
-          15831             0.2805         0.2202         0.3596
-          17731                  0         0.1907              1
-          17917            -0.1384         0.1531         0.6484
-          18884            -0.9522         0.3304         0.0112
+            914               1.14         0.9129         0.2148
+           5775              0.416         0.1735        0.09566
+           8213             0.7429        0.08848         0.2833
+           9166             0.2291        0.08805         0.7817
+          10603             0.5872         0.1435        0.01278
+          11070           -0.03759        0.09737         0.9101
+          15831             0.2562         0.1826         0.3105
+          17731             0.4541         0.1574        0.04317
+          17917            -0.5823         0.1375        0.01627
+          18884            -0.6879         0.3666        0.07897
 
 
-The pvalue for the full disease model is 0.03421:
+The pvalue for the full disease model is 0.003908:
 Disease_locus_index           beta        beta_se
-            914             -1.251         0.8262
-           5775             0.6083         0.2291
-           8213             0.1356         0.1162
-           9166            -0.6322         0.1148
-          10603            0.05922         0.1967
-          11070            -0.7828         0.1182
-          15831             0.4049         0.2473
-          17731           -0.05574          0.211
-          17917            -0.1316          0.168
-          18884             -1.318         0.3544
+            914             0.8734         0.9995
+           5775             0.4746         0.1909
+           8213             0.5221        0.09662
+           9166             0.2674        0.09641
+          10603             0.6237         0.1555
+          11070            0.08217         0.1064
+          15831             0.2106         0.1984
+          17731             0.5005         0.1716
+          17917            -0.8165         0.1484
+          18884            -0.6618         0.4009
 
-HAPGEN took 47 seconds to complete. Have a nice day! 
+HAPGEN took 71 seconds to complete. Have a nice day! 

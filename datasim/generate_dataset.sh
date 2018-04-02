@@ -2,7 +2,7 @@
 
 n_active_genes=10
 n_snps=9999999
-n_controls=50
+n_controls=100
 n_cases=50
 
 # set up various paths

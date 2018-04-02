@@ -1,0 +1,168 @@
+
+======================
+ IMPUTE version 2.3.2 
+======================
+
+Copyright 2008 Bryan Howie, Peter Donnelly, and Jonathan Marchini
+Please see the LICENCE file included with this program for conditions of use.
+
+The seed for the random number generator is 1302866934.
+
+Command-line input: ./impute2 -h hapmap3_r2_b36/hapmap3_r2_b36_chr22.haps -l hapmap3_r2_b36/hapmap3_r2_b36_chr22.legend -m hapmap3_r2_b36/genetic_map_chr22_combined_b36.txt -g -int 14550436 49565872 -allow_large_regions -g working_dataset/hapgen2/generated_output.cases.gen -o working_dataset/impute2/generated_output.imputed.cases
+
+---------------------------------
+ Nomenclature and data structure 
+---------------------------------
+
+     Panel 0: phased reference haplotypes
+     Panel 2: unphased study genotypes
+
+For optimal results, each successive panel (0,1,2) should contain a subset of the SNPs in the previous panel. When the data structure deviates from this ideal configuration, IMPUTE2 tries to use as much of the available information as possible; see documentation for details.
+
+-------------
+ Input files 
+-------------
+
+         Panel 0 haplotypes: hapmap3_r2_b36/hapmap3_r2_b36_chr22.haps
+         Panel 0 hap legend: hapmap3_r2_b36/hapmap3_r2_b36_chr22.legend
+          Panel 2 genotypes: working_dataset/hapgen2/generated_output.cases.gen
+                genetic map: hapmap3_r2_b36/genetic_map_chr22_combined_b36.txt
+
+--------------
+ Output files 
+--------------
+
+                main output: working_dataset/impute2/generated_output.imputed.cases
+                SNP QC info: working_dataset/impute2/generated_output.imputed.cases_info
+             sample QC info: working_dataset/impute2/generated_output.imputed.cases_info_by_sample
+                run summary: working_dataset/impute2/generated_output.imputed.cases_summary
+                warning log: working_dataset/impute2/generated_output.imputed.cases_warnings
+
+-----------------
+ Data processing 
+-----------------
+
+-reading genetic map from -m file
+ --filename=[hapmap3_r2_b36/genetic_map_chr22_combined_b36.txt]
+ --read 43414 SNPs in the analysis interval+buffer region
+
+-reading Panel 2 genotypes from -g file
+ --filename=[working_dataset/hapgen2/generated_output.cases.gen]
+ --detected 50 individuals
+ --read 20084 SNPs in the analysis interval+buffer region
+
+-reading Panel 0 haplotypes from -h and -l files
+ --filename=[hapmap3_r2_b36/hapmap3_r2_b36_chr22.haps]
+ --filename=[hapmap3_r2_b36/hapmap3_r2_b36_chr22.legend]
+ --detected 2022 haplotypes
+ --read 20084 SNPs in the analysis interval+buffer region
+
+-removing SNPs that violate the hierarchical data requirements
+ --no SNPs removed
+
+-removing reference-only SNPs from buffer region
+ --removed 0 SNPs
+
+-checking strand alignment between Panel 2 and Panel 0 by allele labels
+ --flipped strand due to allele mismatch at 0 out of 20084 SNPs in Panel 2
+
+-aligning allele labels between panels
+
+-removing non-aligned genotyped SNPs
+ --removed 0 out of 20084 SNPs with data in multiple panels
+
+--------------
+ Data summary 
+--------------
+
+[type 0 = SNP in Panel 0 only]
+[type 1 = SNP in Panel 1]
+[type 2 = SNP in Panel 2 and all ref panels]
+[type 3 = SNP in Panel 2 only]
+
+-Upstream buffer region
+ --0 type 0 SNPs
+ --0 type 1 SNPs
+ --0 type 2 SNPs
+ --0 type 3 SNPs
+ --0 total SNPs
+
+-Downstream buffer region
+ --0 type 0 SNPs
+ --0 type 1 SNPs
+ --0 type 2 SNPs
+ --0 type 3 SNPs
+ --0 total SNPs
+
+-Analysis region (as defined by -int argument)
+ --0 type 0 SNPs
+ --0 type 1 SNPs
+ --20084 type 2 SNPs
+ --0 type 3 SNPs
+ --20084 total SNPs
+
+-Output file
+ --0 type 0 SNPs
+ --0 type 1 SNPs
+ --20084 type 2 SNPs
+ --0 type 3 SNPs
+ --20084 total SNPs
+
+-In total, 20084 SNPs will be used in the analysis, including 20084 Panel 2 SNPs
+
+-making initial haplotype guesses for Panel 2 by phasing hets at random and imputing missing genotypes from allele freqs
+
+-setting storage space
+-setting mutation matrices
+-setting switch rates
+
+----------------
+ Run parameters 
+----------------
+
+        reference haplotypes: 2022 [Panel 0]
+           study individuals: 50 [Panel 2]
+           sequence interval: [14550436,49565872]
+                      buffer: 250 kb
+                          Ne: 20000
+           input call thresh: 0.900
+     burn-in MCMC iterations: 10
+       total MCMC iterations: 30 (20 used for inference)
+      HMM states for phasing: 80 [Panel 2]
+   HMM states for imputation: 500 [Panel 0->2]
+                active flags: <-allow_large_regions>
+
+---------
+ Run log 
+---------
+
+RESETTING PARAMETERS FOR "SURROGATE FAMILY" MODELING
+-setting mutation matrices
+-setting switch rates
+
+diploid sampling success rate: 0.977
+
+haploid sampling success rate: (no haploid sampling performed)
+
+
+--------------------------------
+ Imputation accuracy assessment 
+--------------------------------
+
+The table below is based on an internal cross-validation that is performed during each IMPUTE2 run. For this analysis, the program masks the genotypes of one variant at a time in the study data (Panel 2) and imputes the masked genotypes by using the remaining study and reference data. The imputed genotypes are then compared with the original genotypes to produce the concordance statistics shown in the table. You can learn more about this procedure and the contents of the table at http://mathgen.stats.ox.ac.uk/impute/concordance_table_description.html.
+
+In the current analysis, IMPUTE2 masked, imputed, and evaluated 1004200 genotypes that were called with high confidence (maximum probability >= 0.90) in the Panel 2 input file (-g or -known_haps_g).
+
+When the masked study genotypes were imputed with reference data from Panel 0, the concordance between original and imputed genotypes was as follows:
+
+  Interval  #Genotypes %Concordance         Interval  %Called %Concordance
+  [0.0-0.1]          0          0.0         [ >= 0.0]   100.0         98.3
+  [0.1-0.2]          0          0.0         [ >= 0.1]   100.0         98.3
+  [0.2-0.3]          0          0.0         [ >= 0.2]   100.0         98.3
+  [0.3-0.4]         56         41.1         [ >= 0.3]   100.0         98.3
+  [0.4-0.5]       1233         53.0         [ >= 0.4]   100.0         98.3
+  [0.5-0.6]      11219         56.6         [ >= 0.5]    99.9         98.4
+  [0.6-0.7]      12127         73.1         [ >= 0.6]    98.8         98.9
+  [0.7-0.8]      16888         81.6         [ >= 0.7]    97.5         99.2
+  [0.8-0.9]      24271         92.8         [ >= 0.8]    95.9         99.5
+  [0.9-1.0]     938406         99.7         [ >= 0.9]    93.4         99.7
