@@ -1,8 +1,8 @@
 #!/usr/bin/env Rscript
-set.seed(123)
+set.seed(43192)
 args = commandArgs(trailingOnly = TRUE)
 # choose 'causal' gene loci
-k = 10
+k = 5
 # N = 100000
 
 legend_file <- args[1]
@@ -21,7 +21,7 @@ causal.genes.loci <- bounded[causal.genes, ]$position
 loc.interval <- c(min(bounded$position), max(bounded$position)) # might be narrow than (lower, upper)
 heter.sizes <- round(runif(k, min = 1.25, max = 1.5), 4)
 homoz.sizes <- heter.sizes + round(runif(k, min = 1.25, max = 1.5), 4)
-# risk.alleles <- rep(1, k)
+# risk.alleles <- rep(0, k)
 risk.alleles <- sample(c(0, 1), replace = TRUE, size = k)
 
 # output argument string

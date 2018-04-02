@@ -1,8 +1,11 @@
 library(snpStats)
+set.seed(43192)
 
 # Nsnp <- 1000000
 dat.cases <- read.impute("datasim/working_dataset/hapgen2/generated_output.cases.gen")
+# dat.cases <- read.impute("datasim/tutorial_data/sim.out.cases.gen")
 dat.contr <- read.impute("datasim/working_dataset/hapgen2/generated_output.controls.gen")
+# dat.contr <- read.impute("datasim/tutorial_data/sim.out.controls.gen")
 row.names(dat.cases) = sapply(1:dim(dat.cases)[1], function(i) paste("Case",i,sep=""))
 row.names(dat.contr) = sapply(1:dim(dat.contr)[1], function(i) paste("Control",i,sep=""))
 genotypes = rbind(dat.contr, dat.cases)
@@ -41,7 +44,7 @@ fit = hclust(Sigma.distance, method="single")
 corr_max = 0.75
 clusters = cutree(fit, h=1-corr_max)
 
-set.seed(123)
+# set.seed(123)
 ind.screen = rep(F, length(phenotypes))
 ind.screen[sample.int(length(phenotypes), size=length(phenotypes)*0.2)] = T
 pvals.screen = p.value(single.snp.tests(phenotypes[ind.screen], snp.data = genotypes[ind.screen,]), df=1)
@@ -91,10 +94,10 @@ colors = rep("gray",length(W))
 colors[discoveries] = "blue"
 #plot(W, col = colors, pch = 16, cex = 1); abline(h = t, lty = 2)
 
-real <- read.table("datasim/working_dataset/active_genes.txt", header = TRUE)
+real <- read.table("datasim/working_dataset/active_genes.txt", header = TRUE, stringsAsFactors = FALSE)
 print(real)
 
-signals = sapply(1:length(real$rsID), function(i) clusters[which(names(clusters)==real$rsID[i])])
+signals = sapply(1:length(real$rs), function(i) clusters[which(names(clusters)==real$rs[i])])
 print(signals)
 
 colors = rep("gray",length(W))
@@ -105,11 +108,14 @@ plot(W, col=colors, pch=16, cex=1); abline(h=t, lty=2)
 true.discoveries = intersect(discoveries, signals)
 false.discoveries = setdiff(discoveries, signals)
 fdp = length(false.discoveries) / length(discoveries)  
-print(fdp) # False discovery proporion
+# print(fdp) # False discovery proporion
 
 
 pvals = p.value(single.snp.tests(phenotypes, snp.data = genotypes), df=1)
-plot(-log10(pvals), col=rgb(0,0,0,alpha=0.25), pch=16,cex=1)
+colors = rep("gray", length(pvals))
+colors[signals] = "red"
+plot(-log10(pvals), col=colors,pch=16,cex=1)
+# points(signals, -log10(pvals[signals]), col = "red", pch = 'x')
 
-pvals.BH = p.adjust(pvals, method = "BH")
-plot(-log10(pvals.BH), col=rgb(0,0,0,alpha=0.25), pch=16,cex=1,ylim=c(0, 1)); abline(h=-log10(0.1), lty=2)
+# pvals.BH = p.adjust(pvals, method = "BH")
+# plot(-log10(pvals.BH), col=rgb(0,0,0,alpha=0.25), pch=16,cex=1,ylim=c(0, 1)); abline(h=-log10(0.1), lty=2)

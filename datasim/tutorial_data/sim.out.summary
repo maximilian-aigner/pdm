@@ -1,0 +1,53 @@
+
+===================================================================
+  Welcome to HAPGEN_v2.2.0 (01/04/2011)
+  Zhan Su, Peter Donnelly, Jonathan Marchini
+===================================================================
+
+Command line input is:
+bin/hapgen2 -m data_HapMap/genetic_map_CEU_chr22.txt -l data_HapMap/genotypes_chr22_CEU_r21_nr_fwd.leg -h data_HapMap/genotypes_chr22_CEU_r21_nr_fwd.hap -o data_sim/sim.out -dl 22152390 1 1.48973873441 2.97947746882 16907889 0 1.44837176961 2.89674353922 16890873 1 1.49059724572 2.98119449145 25640922 0 1.27268860505 2.54537721011 23531242 1 1.28203556952 2.56407113904 25186766 1 1.39142898712 2.78285797423 21731173 1 1.25189558954 2.50379117908 15002875 1 1.25566244649 2.51132489299 25738063 1 1.42184004683 2.84368009367 16599872 0 1.29067939865 2.58135879731 -n 200 350 -int 0 26192121 -no_haps_output 
+
+FILE INPUTS
+                                            haplotype file: data_HapMap/genotypes_chr22_CEU_r21_nr_fwd.hap
+                                               legend file: data_HapMap/genotypes_chr22_CEU_r21_nr_fwd.leg
+                                          genetic map file: data_HapMap/genetic_map_CEU_chr22.txt
+                                             tag snps file: 
+FILE OUTPUTS
+                                               output file: data_sim/sim.out
+                                              summary file: data_sim/sim.out.summary
+PARAMETER INPUTS
+                                  no. controls to simulate: 200
+                                     no. cases to simulate: 350
+                                              disease loci: (1) 15002875 (2) 16599872 (3) 16890873 (4) 16907889 (5) 21731173 (6) 22152390 (7) 23531242 (8) 25186766 (9) 25640922 (10) 25738063 
+                                           disease alleles: (1) 1 (2) 0 (3) 1 (4) 0 (5) 1 (6) 1 (7) 1 (8) 1 (9) 0 (10) 1 
+                             heterozygote/homozygote risks: (1) 1.26/2.51 (2) 1.29/2.58 (3) 1.49/2.98 (4) 1.45/2.90 (5) 1.25/2.50 (6) 1.49/2.98 (7) 1.28/2.56 (8) 1.39/2.78 (9) 1.27/2.55 (10) 1.42/2.84 
+                                                     lower: 0
+                                                     upper: 26192121
+                                                        Ne: 11418
+                                                     theta: -1
+
+Reading genetic map file ... done
+                                      number of rates read: 45332
+
+
+Reading haplotype and legend files: looking for SNPs in [0, 26192121] ... done
+                                      number of haplotypes: 120
+                                   number of SNPs in total: 34026
+                                number of SNPs in interval: 10000
+
+
+Random seed set to 0.719309
+theta not set, so setting to a default value of 0.186259
+
+Processing disease loci ... done 
+
+
+Simulating haplotypes ... done
+
+Writing output to files 
+writing output file data_sim/sim.out.controls.gen
+writing output file data_sim/sim.out.cases.gen
+writing output file data_sim/sim.out.controls.sample
+writing output file data_sim/sim.out.cases.sample
+
+HAPGEN took 154 seconds to complete. Have a nice day! 
