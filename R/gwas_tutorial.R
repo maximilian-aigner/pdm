@@ -82,9 +82,10 @@ Xk[ind.screen,] = X[ind.screen,]
 # this yields NAs because some columns (e.g. Xk[, 181] are all 0)
 
 
-W = stat.glmnet_coefdiff(X, Xk, phenotypes, family="binomial")
+# W = stat.glmnet_coefdiff(X, Xk, phenotypes, family="binomial")
 # W = stat.stability_selection(X, Xk, phenotypes)
 # W = stat.random_forest(X, Xk, phenotypes)
+W = stat.sqrt_lasso(X, Xk, phenotypes)
 # plot(W, pch=16, cex=1)
 t = knockoff.threshold(W, fdr = 0.1, offset = 0)
 discoveries = which(W >= t)
