@@ -49,3 +49,6 @@ vignettes/*.pdf
 /datasim/old
 /datasim/1000G/*
 /datasim/hapmap3_r2_b36/*
+
+# fastPHASE output
+/datasim/OUTPUT_fastPHASE*
