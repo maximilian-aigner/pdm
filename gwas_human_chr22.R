@@ -90,5 +90,31 @@ plot(colMeans(X),colMeans(Xk),col = rgb(0,0,0,alpha = 0.1), pch=16,cex=1); ablin
 library(knockoff)
 library(grpreg)
 
-total.groups <- c(group.names, paste(group.names, "_knockoff"))
-grp.fit <- cv.grpreg(cbind(X, Xk), phenotypes, total.groups, family = "binomial", penalty="cMCP")
+total.groups <- c(group.names, paste0(group.names, "_knockoff"))
+grp.fit <- cv.grpreg(cbind(X, Xk), phenotypes, total.groups, family = "binomial", penalty="grLasso", nlambda = 100)
+lam <- grp.fit$lambda.min
+Z = abs(coef(grp.fit, lambda = lam))
+p = dim(X)[2]
+W = Z[2:(p+1)] - Z[(p+2):(2*p+1)]
+
+t = knockoff.threshold(W, fdr = 0.1, offset = 0)
+discoveries = which(W >= t)
+names(discoveries) = colnames(genotypes)[discoveries]
+print(discoveries)
+colors = rep("gray",length(W))
+colors[discoveries] = "blue"
+#plot(W, col = colors, pch = 16, cex = 1); abline(h = t, lty = 2)
+
+real <- read.table("datasim/working_dataset/active_genes.txt", header = TRUE, stringsAsFactors = FALSE)
+signals <- real$rs
+signals.id <- match(signals, colnames(X))
+names(signals.id) <- signals
+# print(signals)
+
+# signals = sapply(1:length(real$rs), function(i) clusters[which(names(clusters)==real$rs[i])])
+# print(signals)
+
+colors = rep("gray",length(W))
+colors[discoveries] = "red"
+colors[signals.id] = "green"
+plot(W, col=colors, pch=16, cex=1); abline(h=t, lty=2)
