@@ -91,11 +91,15 @@ library(knockoff)
 library(grpreg)
 
 total.groups <- c(group.names, paste0(group.names, "_knockoff"))
-grp.fit <- cv.grpreg(cbind(X, Xk), phenotypes, total.groups, family = "binomial", penalty="grLasso", nlambda = 100)
+grp.fit <- cv.grpreg(cbind(X, Xk), phenotypes, total.groups, family = "binomial", penalty="gel", nlambda = 100)
 lam <- grp.fit$lambda.min
 Z = abs(coef(grp.fit, lambda = lam))
 p = dim(X)[2]
-W = Z[2:(p+1)] - Z[(p+2):(2*p+1)]
+colSD <- apply(cbind(X, Xk), 2, sd)
+orig = 2:(p+1)
+# Z <- Z[2:length(Z)]
+# Z <- Z / colSD;
+W = Z[orig] - Z[p+orig]
 
 t = knockoff.threshold(W, fdr = 0.1, offset = 0)
 discoveries = which(W >= t)
@@ -118,3 +122,4 @@ colors = rep("gray",length(W))
 colors[discoveries] = "red"
 colors[signals.id] = "green"
 plot(W, col=colors, pch=16, cex=1); abline(h=t, lty=2)
+
