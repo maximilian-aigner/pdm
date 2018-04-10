@@ -35,17 +35,12 @@ snpsum.col <- snpsum.col[HWEuse,]
 
 X = as(genotypes, "numeric")
 
-# annotation step
-legend.file <- read.csv("datasim/working_dataset/hapgen2/generated_output.legend", header = TRUE, sep = ' ', stringsAsFactors = FALSE)
-legend.file <- legend.file[use, ]
-legend.file <- legend.file[HWEuse, ]
-ann.df <- data.frame(rsid=legend.file$rs, chr=rep("chr22", nrow(legend.file)), pos = legend.file$pos)
-
-source('annotation.R')
-annotated <- annotate_snps_with_genes(ann.df)
-annotated <- annotated[complete.cases(annotated),]
-group.names <- colnames(X)
-group.names <- mapvalues(group.names, from=annotated$names, to=annotated$GENESYMBOL)
+# Use clusters as groups
+Sigma = cov(X)
+Sigma.distance = as.dist(1 - abs(cov2cor(Sigma)))
+fit = hclust(Sigma.distance, method="single")
+corr_max = 0.75
+clusters = cutree(fit, h=1-corr_max)
   
 library(SNPknock)
 
@@ -63,21 +58,28 @@ hmm = SNPknock.fp.loadFit(r_file, theta_file, alpha_file, X[1,])
 
 Xk = SNPknock.knockoffHMM(X, hmm$pInit, hmm$Q, hmm$pEmit)
 
-plot(colMeans(X),colMeans(Xk),col = rgb(0,0,0,alpha = 0.1), pch=16,cex=1); abline(a=0, b=1, col='red', lty=2)
+plot(colMeans(X),colMeans(Xk),col = rgb(0,0,0,alpha = 0.1), pch=16,cex=1);
+abline(a=0, b=1, col='red', lty=2)
 
 library(knockoff)
 library(grpreg)
 
-total.groups <- c(group.names, paste0(group.names, "_knockoff"))
-grp.fit <- cv.grpreg(cbind(X, Xk), phenotypes, total.groups, family = "binomial", penalty="gel", nlambda = 100)
-lam <- grp.fit$lambda.min
-Z = abs(coef(grp.fit, lambda = lam))
+total.groups <- c(clusters, paste0(clusters, "_knockoff"))
+names(total.groups) <- c(names(clusters), paste0(names(clusters), "_knockoff"))
+grp.fit <- grpreg(cbind(X, Xk), phenotypes, total.groups, family = "binomial",
+                  penalty="grSCAD", nlambda = 100)
+grp.lambdas <- grp.fit$lambda
+min_coefs <- 4
+n_nzcoefs <- sapply(grp.lambdas, function(l) sum(coef(grp.fit, lambda = l)!=0))
+chosen.lambda <- max(grp.lambdas[n_nzcoefs>=min_coefs])
+# chosen.lambda <- grp.fit$lambda.min
+Z = coef(grp.fit, lambda = chosen.lambda)
 p = dim(X)[2]
 colSD <- apply(cbind(X, Xk), 2, sd)
 orig = 2:(p+1)
 # Z <- Z[2:length(Z)]
 # Z <- Z / colSD;
-W = Z[orig] - Z[p+orig]
+W = abs(Z[orig]) - abs(Z[p+orig])
 
 t = knockoff.threshold(W, fdr = 0.1, offset = 0)
 discoveries = which(W >= t)
