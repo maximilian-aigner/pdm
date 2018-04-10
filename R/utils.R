@@ -23,3 +23,19 @@ hmm.knockoffs <- function(X, ...) {
   Xk = SNPknock.knockoffHMM(X, hmm$pInit, hmm$Q, hmm$pEmit)
   return(Xk)
 }
+
+plot.discoveries <- function(W, t, fname = "datasim/working_dataset/active_genes.txt") {
+  discoveries = which(W >= t)
+  names(discoveries) = names(W)[discoveries]
+
+  real <- read.table(fname, header = TRUE, stringsAsFactors = FALSE)
+  signals <- real$rs
+  signals.id <- match(signals, names(W))
+  names(signals.id) <- signals
+  
+  # Plot W-statistic
+  colors = rep("gray", length(W))
+  colors[discoveries] = "red"
+  colors[signals.id] = "green"
+  plot(W, col=colors, pch=16, cex=1); abline(h=t, lty=2)
+}
