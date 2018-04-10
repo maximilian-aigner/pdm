@@ -1,10 +1,15 @@
 library(plyr)
 source('./R/annotation.R')
 
-grouping.clusters <- function(X, corr_max = 0.75, method = "single") {
+grouping.clusters <- function(X, corr_max = 0.75, method = "single", draw.heatmap = FALSE) {
   # Use clusters as groups
   Sigma <- cov(X)
-  Sigma.distance <- as.dist(1 - abs(cov2cor(Sigma)))
+  cov.cor <- cov2cor(Sigma)
+  if (draw.heatmap) {
+    library("heatmap3")
+    heatmap3(cov.cor, useRaster = TRUE)
+  }
+  Sigma.distance <- as.dist(1 - abs(cov.cor))
   fit <- hclust(Sigma.distance, method=method)
   clusters <- cutree(fit, h = 1 - corr_max)
   return(clusters)
