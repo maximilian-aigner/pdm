@@ -42,11 +42,6 @@ fit = hclust(Sigma.distance, method="single")
 corr_max = 0.75
 clusters = cutree(fit, h=1-corr_max)
 
-library(pheatmap)
-pdf(file = "heatmap.pdf", width = 5, height = 10)
-pheatmap(cov2cor(Sigma), cluster_rows = FALSE, cluster_cols = FALSE)
-dev.off()
-
 library(SNPknock)
 
 Xout_path <- "./datasim/OUTPUT_fastPHASE/X_input"
