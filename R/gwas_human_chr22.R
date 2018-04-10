@@ -29,10 +29,10 @@ snpsum.col <- snpsum.col[idx.kept,]
 X = as(genotypes, "numeric")
 
 # Generate groups by clustering
-groups <- grouping.clusters(X)
+groups <- grouping.annotations(X)
 
 # Generate knockoffs
-Xk = insivible(hmm.knockoffs(X))
+Xk = invisible(hmm.knockoffs(X))
 
 # Group knockoffs as the originals, but not paired with them
 total.groups <- c(groups, paste0(groups, "_knockoff"))
