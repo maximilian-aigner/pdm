@@ -1,5 +1,5 @@
 library(knockoff)
-run_vis <- function(X, X_k, y, combination_function)
+run_VIs <- function(X, X_k, y, combination_function)
 {
   out <- c()
   #out <- rbind(out, stat.random_forest(X, X_k, y))
@@ -16,3 +16,9 @@ max_combination <- function(Wmat)
   W <- apply(Wmat, 2, max)
   return(W)
 }
+
+prod_combination <- function(Wmat)
+{
+  W <- apply(Wmat, 2, prod)
+}
+
