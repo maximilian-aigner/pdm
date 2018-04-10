@@ -51,4 +51,4 @@ vignettes/*.pdf
 /datasim/hapmap3_r2_b36/*
 
 # fastPHASE output
-/datasim/OUTPUT_fastPHASE*
+/datasim/fastPHASE/*
