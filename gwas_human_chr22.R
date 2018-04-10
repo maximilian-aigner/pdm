@@ -4,14 +4,11 @@ library(plyr)
 
 
 dat.cases <- read.impute("datasim/working_dataset/hapgen2/generated_output.cases.gen")
-# dat.cases <- read.impute("datasim/tutorial_data/sim.out.cases.gen")
 dat.contr <- read.impute("datasim/working_dataset/hapgen2/generated_output.controls.gen")
-# dat.contr <- read.impute("datasim/tutorial_data/sim.out.controls.gen")
 row.names(dat.cases) = sapply(1:dim(dat.cases)[1], function(i) paste("Case",i,sep=""))
 row.names(dat.contr) = sapply(1:dim(dat.contr)[1], function(i) paste("Control",i,sep=""))
 genotypes = rbind(dat.contr, dat.cases)
 phenotypes = c(rep(0,dim(dat.contr)[1]), rep(1,dim(dat.cases)[1]))
-#dat <- genotypes
 snpsum.col <- col.summary(genotypes)
 
 call <- 0.95
@@ -25,7 +22,7 @@ cat(ncol(genotypes) - sum(use), "SNP's removed due to low MAF or call rate.\n")
 genotypes <- genotypes[, use]
 snpsum.col <- snpsum.col[use,]
 
-hardy = 10^-6      # HWE cut-off
+hardy = 10^-6
 
 snpsum.colCont = col.summary(genotypes)
 HWEuse = with(snpsum.colCont, !is.na(z.HWE) & ( abs(z.HWE) < abs( qnorm(hardy/2) ) ) )
@@ -46,28 +43,9 @@ ann.df <- data.frame(rsid=legend.file$rs, chr=rep("chr22", nrow(legend.file)), p
 
 source('annotation.R')
 annotated <- annotate_snps_with_genes(ann.df)
-
-#baseann <- cbind(ann.df, ann.df$rsid)
-#colnames(baseann) <- c("rsid", "chr", "pos", "grp")
-
-#just.groups <- data.frame(rsid=annotated$names,
-#                           grp=annotated$GENESYMBOL)
-#just.groups <- data.frame(lapply(just.groups, as.character), stringsAsFactors=FALSE)
-#just.groups[is.na(just.groups$grp), ]$grp <- just.groups[is.na(just.groups$grp),]$rsid
-
-#avec <- just.groups$grp
-#names(avec)<-just.groups$rsid
 annotated <- annotated[complete.cases(annotated),]
-
-
 group.names <- colnames(X)
-# not_subbed <- group.names[!(group.names %in% annotated$names)]
 group.names <- mapvalues(group.names, from=annotated$names, to=annotated$GENESYMBOL)
-# map <- setNames(c(annotated$names, not_subbed), c(annotated$GENESYMBOL, not_subbed))
-# group.names[] <- map[unlist(group.names)]
-# idx <- annotated$names == group.names
-# group.names[idx] <- annotated$GENESYMBOL[idx]
-#group.names[annotated$names %in% group.names] <- annotated[annotated$names %in% group.names, ]$GENESYMBOL
   
 library(SNPknock)
 
@@ -105,19 +83,13 @@ t = knockoff.threshold(W, fdr = 0.1, offset = 0)
 discoveries = which(W >= t)
 names(discoveries) = colnames(genotypes)[discoveries]
 print(discoveries)
-colors = rep("gray",length(W))
-colors[discoveries] = "blue"
-#plot(W, col = colors, pch = 16, cex = 1); abline(h = t, lty = 2)
 
 real <- read.table("datasim/working_dataset/active_genes.txt", header = TRUE, stringsAsFactors = FALSE)
 signals <- real$rs
 signals.id <- match(signals, colnames(X))
 names(signals.id) <- signals
-# print(signals)
 
-# signals = sapply(1:length(real$rs), function(i) clusters[which(names(clusters)==real$rs[i])])
-# print(signals)
-
+# Plot W-statistic
 colors = rep("gray",length(W))
 colors[discoveries] = "red"
 colors[signals.id] = "green"
