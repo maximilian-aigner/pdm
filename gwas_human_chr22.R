@@ -41,7 +41,12 @@ Sigma.distance = as.dist(1 - abs(cov2cor(Sigma)))
 fit = hclust(Sigma.distance, method="single")
 corr_max = 0.75
 clusters = cutree(fit, h=1-corr_max)
-  
+
+library(pheatmap)
+pdf(file = "heatmap.pdf", width = 5, height = 10)
+pheatmap(cov2cor(Sigma), cluster_rows = FALSE, cluster_cols = FALSE)
+dev.off()
+
 library(SNPknock)
 
 Xout_path <- "./datasim/OUTPUT_fastPHASE/X_input"
@@ -63,22 +68,24 @@ abline(a=0, b=1, col='red', lty=2)
 
 library(knockoff)
 library(grpreg)
+library(glmnet)
 
 total.groups <- c(clusters, paste0(clusters, "_knockoff"))
 names(total.groups) <- c(names(clusters), paste0(names(clusters), "_knockoff"))
-grp.fit <- grpreg(cbind(X, Xk), phenotypes, total.groups, family = "binomial",
-                  penalty="grSCAD", nlambda = 100)
+#grp.fit <- grpreg(cbind(X, Xk), phenotypes, total.groups, family = "binomial",
+#                  penalty="grSCAD", nlambda = 100)
+grp.fit <- glmnet(cbind(X, Xk), phenotypes, family = "binomial", nlambda = 100)
 grp.lambdas <- grp.fit$lambda
-min_coefs <- 4
-n_nzcoefs <- sapply(grp.lambdas, function(l) sum(coef(grp.fit, lambda = l)!=0))
+min_coefs <- 20
+n_nzcoefs <- sapply(grp.lambdas, function(l) sum(coef(grp.fit, s = l)!=0))
 chosen.lambda <- max(grp.lambdas[n_nzcoefs>=min_coefs])
 # chosen.lambda <- grp.fit$lambda.min
-Z = coef(grp.fit, lambda = chosen.lambda)
+Z = coef(grp.fit, s = chosen.lambda)
 p = dim(X)[2]
 colSD <- apply(cbind(X, Xk), 2, sd)
 orig = 2:(p+1)
 # Z <- Z[2:length(Z)]
-# Z <- Z / colSD;
+# Z <- Z * c(1,colSD);
 W = abs(Z[orig]) - abs(Z[p+orig])
 
 t = knockoff.threshold(W, fdr = 0.1, offset = 0)
