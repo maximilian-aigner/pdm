@@ -1,0 +1,11 @@
+Package: Clusternet
+Type: Package
+Title: hhsvm classification using the cluster elastic net penality
+Version: 1.0
+Date: 2015-03-28
+Author: Rachid Kharoubi and Karim Oualkacha
+Maintainer: <oualkacha.karim@uqam.ca>
+Depends: Matrix
+Description: This package implements a algorithm for computing the solution path of the hybrid Huberized support vector machine (HHSVM) using the cluster elastic net.
+License: GPL-2
+Packaged: 2015-08-13 01:26:01 UTC; rachid
