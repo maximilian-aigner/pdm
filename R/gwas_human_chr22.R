@@ -29,7 +29,7 @@ snpsum.col <- snpsum.col[idx.kept,]
 X = as(genotypes, "numeric")
 
 # Generate groups by clustering
-groups <- grouping.annotations(X)
+groups <- grouping.annotations(X, verbose = TRUE)
 
 # Generate knockoffs
 Xk = invisible(hmm.knockoffs(X))
@@ -39,8 +39,8 @@ total.groups <- c(groups, paste0(groups, "_knockoff"))
 names(total.groups) <- c(names(groups), paste0(names(groups), "_knockoff"))
 
 
-W = stats.group_logit_lasso(X, Xk, phenotypes, total.groups)
-thresh = knockoff.threshold(W, fdr = 0.1, offset = 0)
+W = stats.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = "grMCP")
+thresh = knockoff.threshold(W, fdr = 0.2, offset = 0)
 
 plot.discoveries(W, thresh)
 

@@ -37,5 +37,5 @@ plot.discoveries <- function(W, t, fname = "datasim/working_dataset/active_genes
   colors = rep("gray", length(W))
   colors[discoveries] = "red"
   colors[signals.id] = "green"
-  plot(W, col=colors, pch=16, cex=1); abline(h=t, lty=2)
+  plot(W, col = colors, pch = 16, cex = 1); abline(h = t, lty = 2)
 }
