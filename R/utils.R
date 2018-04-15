@@ -33,9 +33,7 @@ plot.discoveries <- function(W, t, fname = "datasim/working_dataset/active_genes
   signals.id <- match(signals, names(W))
   names(signals.id) <- signals
   
-  # Plot W-statistic
-  colors = rep("gray", length(W))
-  colors[discoveries] = "red"
-  colors[signals.id] = "green"
-  plot(W, col = colors, pch = 16, cex = 1); abline(h = t, lty = 2)
+  plot(W, col = "gray", pch = 16, cex = 1); abline(h = t, lty = 2)
+  points(discoveries, W[discoveries], col = "blue", pch = 'x')
+  points(signals.id, W[signals.id], col = "green", pch = 'x')
 }
