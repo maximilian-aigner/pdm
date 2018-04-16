@@ -36,4 +36,5 @@ plot.discoveries <- function(W, t, fname = "datasim/working_dataset/active_genes
   plot(W, col = "gray", pch = 16, cex = 1); abline(h = t, lty = 2)
   points(discoveries, W[discoveries], col = "blue", pch = 'x')
   points(signals.id, W[signals.id], col = "green", pch = 'x')
+  return(list(discoveries=discoveries, signals=signals.id))
 }

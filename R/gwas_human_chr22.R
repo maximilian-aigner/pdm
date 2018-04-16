@@ -41,7 +41,7 @@ names(total.groups) <- c(names(groups), paste0(names(groups), "_knockoff"))
 
 
 W = stats.xgboost(X, Xk, phenotypes)
-thresh = knockoff.threshold(W, fdr = 0.2, offset = 0)
+thresh = knockoff.threshold(W, fdr = 0.01, offset = 1)
 
-plot.discoveries(W, thresh)
+outcomes <- plot.discoveries(W, thresh)
 
