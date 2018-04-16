@@ -47,7 +47,7 @@ stats.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode
 stats.xgboost <- function(X, X_k, y) {
   xgb.control <- trainControl(
     method = 'cv',
-    number = 2,
+    number = 10,
     summaryFunction = twoClassSummary,
     classProbs = TRUE,
     verboseIter = TRUE,
@@ -58,7 +58,7 @@ stats.xgboost <- function(X, X_k, y) {
     max_depth = c(4, 6),
     eta = c(0.05, 0.1),
     gamma = c(0.01),
-    colsample_bytree = c(0.75),
+    colsample_bytree = c(0.5, 0.75, 0.9),
     subsample = c(0.5),
     min_child_weight = c(0)
   )
