@@ -24,7 +24,7 @@ hmm.knockoffs <- function(X, ...) {
   return(Xk)
 }
 
-plot.discoveries <- function(W, t, fname = "datasim/working_dataset/active_genes.txt") {
+plot.discoveries <- function(W, t, plotit = TRUE, fname = "datasim/working_dataset/active_genes.txt") {
   discoveries = which(W >= t)
   names(discoveries) = names(W)[discoveries]
 
@@ -33,8 +33,17 @@ plot.discoveries <- function(W, t, fname = "datasim/working_dataset/active_genes
   signals.id <- match(signals, names(W))
   names(signals.id) <- signals
   
-  plot(W, col = "gray", pch = 16, cex = 1); abline(h = t, lty = 2)
-  points(discoveries, W[discoveries], col = "blue", pch = 'x')
-  points(signals.id, W[signals.id], col = "green", pch = 'x')
+  if (plotit) { 
+    plot(W, col = "gray", pch = 16, cex = 1); abline(h = t, lty = 2)
+    points(discoveries, W[discoveries], col = "blue", pch = 'x')
+    points(signals.id, W[signals.id], col = "green", pch = 'x')
+  }
   return(list(discoveries=discoveries, signals=signals.id))
+}
+
+empirical.fdr <- function(W, t, ...) {
+  outcomes <- plot.discoveries(W, t, plotit = FALSE, ...)
+  false <- setdiff(outcomes$signals, outcomes$discoveries)
+  empirical <- length(false)/length(discoveries)
+  return(empirical)
 }

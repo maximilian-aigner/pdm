@@ -37,7 +37,10 @@ vignettes/*.pdf
 
 # Vim swaps
 *.swp
+
+# R files
 .Rproj.user
+*.rda
 
 # knockoff package source code
 # /knockoff/
@@ -52,3 +55,4 @@ vignettes/*.pdf
 
 # fastPHASE output
 /datasim/fastPHASE/*
+/datasim/fastPHASE/OUTPUT_fastPHASE_finallikelihoods
