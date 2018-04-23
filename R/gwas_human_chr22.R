@@ -40,8 +40,11 @@ total.groups <- c(groups, paste0(groups, "_knockoff"))
 names(total.groups) <- c(names(groups), paste0(names(groups), "_knockoff"))
 
 
-W = stats.xgboost(X, Xk, phenotypes)
-thresh = knockoff.threshold(W, fdr = 0.01, offset = 1)
-
+W = stats.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = "grLasso")
+thresh = knockoff.threshold(W, fdr = 0.1, offset = 1)
+# names(W) <- colnames(X)
 outcomes <- plot.discoveries(W, thresh)
 
+active <- read.table('~/src/pdm/datasim/working_dataset/active_genes.txt', stringsAsFactors = "FALSE", header = TRUE, sep = ' ')
+active.genes <- unique(active$GENESYMBOL)
+active.snps <- which(groups %in% active.genes)

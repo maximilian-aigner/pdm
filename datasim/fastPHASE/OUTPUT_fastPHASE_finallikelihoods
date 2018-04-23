@@ -1,2 +1,2 @@
-./datasim/fastPHASE/fastPHASE.bin -Pp -T1 -K8 -g -H-4 -C10 -S1 -o/Users/maxim/src/pdm/datasim/fastPHASE/OUTPUT_fastPHASE /var/folders/r9/w7ytk81s5xlf7qx5w3_l3dx40000gn/T//RtmpJQKb5g/file80b252129c0d.inp 
-1	-1046741.775541
+./datasim/fastPHASE/fastPHASE.bin -Pp -T1 -K8 -g -H-4 -C10 -S1 -o/Users/maxim/src/pdm/datasim/fastPHASE/OUTPUT_fastPHASE /var/folders/14/jynq8w0n1zqc37q6b_x4l_km0000gn/T//Rtmp6xnY6J/file1a103e2f9208.inp 
+1	-1498025.840631
