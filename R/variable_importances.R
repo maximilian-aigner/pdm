@@ -44,10 +44,10 @@ stats.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode
   return(W)
 }
 
-stats.xgboost <- function(X, X_k, y) {
+stats.xgboost <- function(X, X_k, y, n.cv = 4) {
   xgb.control <- trainControl(
     method = 'cv',
-    number = 10,
+    number = n.cv,
     summaryFunction = twoClassSummary,
     classProbs = TRUE,
     verboseIter = TRUE,

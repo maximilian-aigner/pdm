@@ -54,5 +54,6 @@ vignettes/*.pdf
 /datasim/hapmap3_r2_b36/*
 
 # fastPHASE output
+/datasim/fastPHASE/
 /datasim/fastPHASE/*
 /datasim/fastPHASE/OUTPUT_fastPHASE_finallikelihoods
