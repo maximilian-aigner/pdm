@@ -50,3 +50,6 @@ active.genes <- unique(active$GENESYMBOL)
 active.snps <- which(groups %in% active.genes)
 names(active.snps) <- names(groups[active.snps])
 # W[active.snps] should be all nonzero
+
+# grp.fit$fit$group.multiplier
+# ????
