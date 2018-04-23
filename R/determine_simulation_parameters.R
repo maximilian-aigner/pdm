@@ -1,8 +1,8 @@
 #!/usr/bin/env Rscript
-set.seed(43193)
+set.seed(43196)
 args = commandArgs(trailingOnly = TRUE)
 # choose 'causal' gene loci
-k = 5
+k = 10
 # N = 100000
 
 legend_file <- args[1]

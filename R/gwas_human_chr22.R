@@ -40,15 +40,18 @@ total.groups <- c(groups, paste0(groups, "_knockoff"))
 names(total.groups) <- c(names(groups), paste0(names(groups), "_knockoff"))
 
 
-W = stats.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = "grLasso")
+W = stats.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = "grMCP", mode = 10)
 thresh = knockoff.threshold(W, fdr = 0.1, offset = 1)
-# names(W) <- colnames(X)
+names(W) <- colnames(X)
 outcomes <- plot.discoveries(W, thresh)
 
 active <- read.table('~/src/pdm/datasim/working_dataset/active_genes.txt', stringsAsFactors = FALSE, header = TRUE, sep = ' ')
 active.genes <- unique(active$GENESYMBOL)
 active.snps <- which(groups %in% active.genes)
 names(active.snps) <- names(groups[active.snps])
+hits <- sapply(names(W[W>0]), function(snp) {
+  return(snp %in% names(active.snps))
+})
 # W[active.snps] should be all nonzero
 
 # grp.fit$fit$group.multiplier

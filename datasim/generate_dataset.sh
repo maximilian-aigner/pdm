@@ -1,9 +1,9 @@
 #!/bin/bash
 
-n_active_genes=5
+n_active_genes=10
 n_snps=15000
-n_controls=350
-n_cases=200
+n_controls=500
+n_cases=400
 
 do_impute=false
 

@@ -57,3 +57,8 @@ vignettes/*.pdf
 /datasim/fastPHASE/
 /datasim/fastPHASE/*
 /datasim/fastPHASE/OUTPUT_fastPHASE_finallikelihoods
+datasim/fastPHASE/OUTPUT_fastPHASE_alphahat.txt
+datasim/fastPHASE/OUTPUT_fastPHASE_alphahat.txt
+datasim/fastPHASE/OUTPUT_fastPHASE_finallikelihoods
+datasim/fastPHASE/OUTPUT_fastPHASE_alphahat.txt
+datasim/fastPHASE/OUTPUT_fastPHASE_origchars
