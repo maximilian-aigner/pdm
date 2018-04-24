@@ -26,8 +26,8 @@ causal.genes.loci <- final.selection$position
 loc.interval <- c(min(bounded$position), max(bounded$position)) # might be narrow than (lower, upper)
 heter.sizes <- round(runif(k, min = 1.25, max = 1.5), 4)
 homoz.sizes <- heter.sizes + round(runif(k, min = 1.25, max = 1.5), 4)
-risk.alleles <- rep(0, k)
-# risk.alleles <- sample(c(0, 1), replace = TRUE, size = k)
+# risk.alleles <- rep(0, k)
+risk.alleles <- sample(c(0, 1), replace = TRUE, size = k)
 
 ints <- paste0("-int ", paste(loc.interval, sep = " ", collapse = " "))
 dls <- paste("-dl", paste(causal.genes.loci, risk.alleles, heter.sizes, homoz.sizes, sep = " ", collapse = " "))

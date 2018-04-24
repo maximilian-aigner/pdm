@@ -24,9 +24,9 @@ prod_combination <- function(Wmat) {
 stats.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode = "best", ...) {
   if (is.numeric(mode)) {
     # minimum guaranteed nonzero coefs (mode = number of them)
-    # heuristic: number of lambdas should be at least 2*mode
+    # heuristic: number of lambdas should be at least 5*mode
     grp.fit <- grpreg(cbind(X, X_k), y, groups, family = "binomial",
-                         penalty=penalty, nlambda = 2*mode, ...)
+                         penalty=penalty, nlambda = mode^2, ...)
     grp.lambdas <- grp.fit$lambda
     min_coefs <- mode
     n_nzcoefs <- sapply(grp.lambdas, function(l) sum(coef(grp.fit, lambda = l)!=0))
