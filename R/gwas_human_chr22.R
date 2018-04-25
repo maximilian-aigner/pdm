@@ -34,14 +34,14 @@ groups <- grouping.annotations(X)
 # Generate knockoffs
 Xk = invisible(hmm.knockoffs(X))
 colnames(Xk) <- paste0(colnames(X), "_knockoff")
-a
+
 # Group knockoffs as the originals, but not paired with them
 total.groups <- c(groups, paste0(groups, "_knockoff"))
 names(total.groups) <- c(names(groups), paste0(names(groups), "_knockoff"))
 total.groups <- as.factor(total.groups)
 # group.multipliers <- 
 W = stats.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = "cMCP")
-thresh = knockoff.threshold(W, fdr = 0.5, offset = 0)
+thresh = knockoff.threshold(W, fdr = 0.1, offset = 0)
 names(W) <- colnames(X)
 outcomes <- plot.discoveries(W, thresh)
 
