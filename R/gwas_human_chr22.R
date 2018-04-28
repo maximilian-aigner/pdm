@@ -39,20 +39,18 @@ colnames(Xk) <- paste0(colnames(X), "_knockoff")
 total.groups <- c(groups, paste0(groups, "_knockoff"))
 names(total.groups) <- c(names(groups), paste0(names(groups), "_knockoff"))
 total.groups <- as.factor(total.groups)
-# group.multipliers <- 
+
+# Compute W-statistic
 W = stats.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = "cMCP")
+
+# Threshold
 thresh = knockoff.threshold(W, fdr = 0.1, offset = 0)
+
 names(W) <- colnames(X)
 outcomes <- plot.discoveries(W, thresh)
 
+# Compare to true active set
 active <- read.table('~/src/pdm/datasim/working_dataset/active_genes.txt', stringsAsFactors = FALSE, header = TRUE, sep = ' ')
 active.genes <- unique(active$GENESYMBOL)
 active.snps <- which(groups %in% active.genes)
 names(active.snps) <- names(groups[active.snps])
-#hits <- sapply(names(W[W>0]), function(snp) {
-#  return(snp %in% names(active.snps))
-#})
-# W[active.snps] should be all nonzero
-
-# grp.fit$fit$group.multiplier
-# ????
