@@ -14,7 +14,7 @@ annotations <- read.table('~/src/pdm/datasim/working_dataset/annotations.txt', s
 merged <- merge(bounded, annotations, by.x = "rs", by.y = "names")
 # sample two genes, and then k among SNPs
 genes <- table(merged$GENESYMBOL)
-genes <- genes[genes>k]
+genes <- genes[genes > k]
 top2 <- sample(1:length(genes), 2, replace = FALSE)
 selected.genes <- genes[top2]
 selected.genes.snps <- subset(merged, GENESYMBOL %in% names(selected.genes))
