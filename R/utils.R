@@ -35,8 +35,8 @@ plot.discoveries <- function(W, t, plotit = TRUE, fname = "datasim/working_datas
   
   if (plotit) { 
     plot(W, col = "gray", pch = 16, cex = 1); abline(h = t, lty = 2)
-    points(signals.id, W[signals.id], col = "green", pch = 'x')
-    points(discoveries, W[discoveries], col = "blue", pch = 8)
+    points(signals.id, W[signals.id], col = "green", pch = 0)
+    points(discoveries, W[discoveries], col = "blue", pch = 4)
   }
   return(list(discoveries=discoveries, signals=signals.id))
 }
