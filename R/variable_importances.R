@@ -1,7 +1,7 @@
 library(knockoff)
 library(caret)
 
-combine_VIs <- function(X, X_k, y, combination_function) {
+stat.combined <- function(X, X_k, y, combination_function) {
   out <- c()
   #out <- rbind(out, stat.random_forest(X, X_k, y))
   #out <- rbind(out, stat.stability_selection(X, X_k, y))
@@ -9,19 +9,20 @@ combine_VIs <- function(X, X_k, y, combination_function) {
   out <- rbind(out, stat.glmnet_coefdiff(X, X_k, y))
   out <- rbind(out, stat.glmnet_lambdadiff(X, X_k, y))
   out <- rbind(out, stat.glmnet_coefdiff(X, X_k, y, alpha = 0))
+  out <- rbind(out, stat.xgboost(X, X_k, y))
   return(combination_function(out))
 }
 
-max_combination <- function(Wmat) {
+combine.max <- function(Wmat) {
   W <- apply(Wmat, 2, max)
   return(W)
 }
 
-prod_combination <- function(Wmat) {
+combine.prod <- function(Wmat) {
   W <- apply(Wmat, 2, prod)
 }
 
-weighted.sum <- function(Wmat) {
+combine.weighted.sum <- function(Wmat) {
   weights <- 1.0/apply(Wmat, 1, function(row) max(row)-min(row))
   return(colSums(Wmat*weights))
 }
@@ -49,7 +50,7 @@ stats.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode
   return(W)
 }
 
-stats.xgboost <- function(X, X_k, y, n.cv = 4) {
+stat.xgboost <- function(X, X_k, y, n.cv = 4) {
   xgb.control <- trainControl(
     method = 'cv',
     number = n.cv,
