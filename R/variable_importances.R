@@ -21,6 +21,11 @@ prod_combination <- function(Wmat) {
   W <- apply(Wmat, 2, prod)
 }
 
+weighted.sum <- function(Wmat) {
+  weights <- 1.0/apply(Wmat, 1, function(row) max(row)-min(row))
+  return(colSums(Wmat*weights))
+}
+
 stats.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode = "best", ...) {
   if (is.numeric(mode)) {
     # minimum guaranteed nonzero coefs (mode = number of them)
