@@ -22,9 +22,16 @@ combine.prod <- function(Wmat) {
   W <- apply(Wmat, 2, prod)
 }
 
-combine.weighted.sum <- function(Wmat) {
-  weights <- 1.0/apply(Wmat, 1, function(row) max(row)-min(row))
-  return(colSums(Wmat*weights))
+combine.weighted <- function(Wmat, type = "sum", weights = "sd") {
+  if (weights == "sd")
+    weights <- 1.0/apply(Wmat, 1, stats::sd)
+  else if (weights == "range")
+    weights <- 1.0/apply(Wmat, 1, function(row) max(row)-min(row))
+  if (type == "sum")
+    Wfinal <- colSums(Wmat*weights)
+  else if (type == "mean")
+    Wfinal <- colMeans(Wmat*weights)
+  return(Wfinal);
 }
 
 stats.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode = "best", ...) {
