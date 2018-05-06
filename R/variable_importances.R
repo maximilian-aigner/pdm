@@ -38,12 +38,25 @@ stats.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode
   if (is.numeric(mode)) {
     # minimum guaranteed nonzero coefs (mode = number of them)
     # heuristic: number of lambdas should be at least mode^2
-    grp.fit <- grpreg(cbind(X, X_k), y, groups, family = "binomial",
-                         penalty=penalty, nlambda = mode^2, ...)
-    grp.lambdas <- grp.fit$lambda
-    min_coefs <- mode
-    n_nzcoefs <- sapply(grp.lambdas, function(l) sum(coef(grp.fit, lambda = l) != 0))
-    chosen.lambda <- max(grp.lambdas[n_nzcoefs >= min_coefs])
+    min.vals <- mode
+    min.vals.lambdas <- c()
+    min.vals.errs <- c()
+    for (i in 1:length(min.vals)) {
+      min_coefs <- min.vals[i]
+      one.grp.fit <- grpreg(cbind(X, X_k), y, groups, family = "binomial",
+                         penalty=penalty, nlambda = 1+min_coefs^2, ...)
+      grp.lambdas <- one.grp.fit$lambda
+      nzcoefs <- sapply(grp.lambdas, function(l) sum(coef(one.grp.fit, lambda = l) != 0))
+      highest.lambda <- max(grp.lambdas[nzcoefs >= min_coefs])
+      highest.lambda.idx <- which(grp.lambdas[nzcoefs >= min_coefs] == highest.lambda)
+      min.vals.lambdas[i] <- highest.lambda
+      min.vals.errs[i] <- one.grp.fit$loss[highest.lambda.idx]
+    }
+    # now, select the (lambda, nnz) with lowest loss
+    best.overall <- which(min.vals.errs == min(min.vals.errs))
+    chosen.lambda <- min.vals.lambdas[best.overall]
+    print(min.vals.lambdas)
+    grp.fit <- grpreg(cbind(X, X_k), y, groups, family = "binomial", penalty = penalty, lambda = min.vals.lambdas, max.iter = 1e6)
   } else {
     # assume we are choosing the best (CV sense) lambda
     grp.fit <- cv.grpreg(cbind(X, X_k), y, groups, family = "binomial",
