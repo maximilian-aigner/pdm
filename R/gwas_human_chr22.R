@@ -41,7 +41,7 @@ names(total.groups) <- c(names(groups), paste0(names(groups), "_knockoff"))
 total.groups <- as.factor(total.groups)
 
 # Compute W-statistic
-W = stats.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = "cMCP", mode = 1:20)
+W = stats.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = "cMCP", mode = 20)
 # W = stat.combined(X, Xk, phenotypes, combine.weighted)
 
 # Threshold

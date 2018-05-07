@@ -1,3 +1,3 @@
-./datasim/fastPHASE/fastPHASE.bin -Pp -T2 -K12 -g -H-4 -C20 -S1 -o/Users/maxim/src/pdm/datasim/fastPHASE/OUTPUT_fastPHASE /var/folders/14/jynq8w0n1zqc37q6b_x4l_km0000gn/T//RtmpRAScey/file9697c43f547.inp 
+./datasim/fastPHASE/fastPHASE.bin -Pp -T2 -K12 -g -H-4 -C20 -S1 -o/Users/maxim/src/pdm/datasim/fastPHASE/OUTPUT_fastPHASE /var/folders/14/jynq8w0n1zqc37q6b_x4l_km0000gn/T//RtmplzwK60/file965341abc47.inp 
 16807	-1264665.104916
 282475249	-1260370.607121
