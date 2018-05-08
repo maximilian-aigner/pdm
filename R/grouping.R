@@ -31,7 +31,7 @@ grouping.annotations <- function(X, legend_file="./datasim/working_dataset/hapge
     n.unchanged <- sum(names(copy) == copy)
     n.changed <- length(copy) - n.unchanged
     rat.changed <- n.changed/length(copy)
-    cat("Annotated", n.changed, "SNPs — ", rat.changed*100, "%.\n")
+    cat("Annotated", n.changed, "SNPs — ", rat.changed * 100, "%.\n")
   }
   return(copy)
 }
