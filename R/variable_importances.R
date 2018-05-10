@@ -9,7 +9,7 @@ stat.combined <- function(X, X_k, y, combination_function) {
   out <- rbind(out, stat.glmnet_coefdiff(X, X_k, y))
   out <- rbind(out, stat.glmnet_lambdadiff(X, X_k, y))
   out <- rbind(out, stat.glmnet_coefdiff(X, X_k, y, alpha = 0))
-  out <- rbind(out, stat.xgboost(X, X_k, y))
+  #out <- rbind(out, stat.xgboost(X, X_k, y))
   return(combination_function(out))
 }
 
@@ -26,18 +26,26 @@ combine.weighted <- function(Wmat, type = "sum", weights = "sd") {
   if (weights == "sd")
     weights <- 1.0/apply(Wmat, 1, stats::sd)
   else if (weights == "range")
-    weights <- 1.0/apply(Wmat, 1, function(row) max(row)-min(row))
+    weights <- 1.0/apply(Wmat, 1, function(row) max(row) - min(row))
+  else if (weights == "var")
+    weights <- 1.0/apply(Wmat, 1, stats::var)
+  # don't forget to normalise weights, you dummy
+  weights <- weights * 1/sum(weights)
   if (type == "sum")
-    Wfinal <- colSums(Wmat*weights)
+    Wfinal <- colSums(weights*Wmat)
   else if (type == "mean")
-    Wfinal <- colMeans(Wmat*weights)
-  return(Wfinal);
+    Wfinal <- colMeans(weights*Wmat)
+  return(list(
+    Wfinal = Wfinal,
+    weights = weights,
+    correlation = cor(t(Wmat))
+  ));
 }
 
 stats.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode = "best", ...) {
   if (is.numeric(mode)) {
     grp.fit <- grpreg(cbind(X, X_k), y, groups, family = "binomial",
-                      penalty=penalty, nlambda = mode^2, ...)
+                      penalty = penalty, nlambda = mode^2, ...)
     grp.lambdas <- grp.fit$lambda
     min_coefs <- mode
     n_nzcoefs <- sapply(grp.lambdas, function(l) sum(coef(grp.fit, lambda = l) != 0))
@@ -45,7 +53,7 @@ stats.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode
   } else {
     # assume we are choosing the best (CV sense) lambda
     grp.fit <- cv.grpreg(cbind(X, X_k), y, groups, family = "binomial",
-                         penalty=penalty, ...)
+                         penalty = penalty, ...)
     chosen.lambda <- grp.fit$lambda.min
   }
   Z = coef(grp.fit, lambda = chosen.lambda)
@@ -84,4 +92,3 @@ stat.xgboost <- function(X, X_k, y, n.cv = 4) {
   W = abs(Z[orig]) - abs(Z[p + orig])
   return(W)
 }
-
