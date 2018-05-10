@@ -66,7 +66,7 @@ If you have not downloaded it yet, you can obtain fastPhase from: http://scheet.
   
   # Prepare arguments for fastPhase
   command = fp_path
-  command = paste(command, " -Pp -T2 -K", K, sep="")
+  command = paste(command, " -Pp -T1 -K", K, sep="")
   command = paste(command, " -g -H-4 -C", numit, sep="")
   command = paste(command, " -S", seed, sep="")
   command = paste(command, " -o'", out_path_abs, "' ", X_file, sep="")
