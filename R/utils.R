@@ -12,7 +12,7 @@ hmm.knockoffs <- function(X, ...) {
   Xinp_file = SNPknock.fp.writeX(X)
   fp_path  = "./datasim/fastPHASE/fastPHASE.bin"
   fp_output_path = "./datasim/fastPHASE/OUTPUT_fastPHASE"
-  fp_outPath = SNPknock.fp.runFastPhase(fp_path, Xinp_file, out_path = fp_output_path, K = 12, numit = 20, ...)
+  fp_outPath = SNPknock.fp.runFastPhase(fp_path, Xinp_file, out_path = fp_output_path, K = 8, numit = 10, ...)
   
   r_file = paste(fp_outPath, "_rhat.txt", sep="")
   theta_file = paste(fp_outPath, "_thetahat.txt", sep="")
