@@ -44,8 +44,8 @@ total.groups <- as.factor(total.groups)
 
 # Compute W-statistic
 # W = stat.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = "cMCP", mode = 20)
-Wo <- stat.combined.groups(X, Xk, phenotypes, total.groups, combine.weighted)
-W <- Wo$Wfinal
+Wo <- stat.combined.groups(X, Xk, phenotypes, total.groups, combine.prod, ret.copy = TRUE)
+W <- Wo$combined
 
 # Threshold
 thresh <- knockoff.threshold(W, fdr = 0.1, offset = 0)

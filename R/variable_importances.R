@@ -1,7 +1,7 @@
 library(knockoff)
 library(caret)
 
-stat.combined <- function(X, X_k, y, combination_function) {
+stat.combined <- function(X, X_k, y, combination_function, ret.copy = FALSE) {
   out <- c()
   #out <- rbind(out, stat.random_forest(X, X_k, y))
   #out <- rbind(out, stat.stability_selection(X, X_k, y))
@@ -10,13 +10,17 @@ stat.combined <- function(X, X_k, y, combination_function) {
   out <- rbind(out, stat.glmnet_lambdadiff(X, X_k, y))
   out <- rbind(out, stat.glmnet_coefdiff(X, X_k, y, alpha = 0))
   out <- rbind(out, stat.xgboost(X, X_k, y))
+  if (ret.copy)
+    return(list(Wmat = out, combined = combination_function(out)))
   return(combination_function(out))
 }
 
-stat.combined.groups <- function(X, X_k, y, groups, combination_function, ...) {
+stat.combined.groups <- function(X, X_k, y, groups, combination_function, ret.copy = FALSE, ...) {
   out <- c()
-  out <- rbind(out, stat.group_logit_lasso(X, X_k, y, groups, penalty = "grLasso", mode = "20", ...))
+  out <- rbind(out, stat.group_logit_lasso(X, X_k, y, groups, penalty = "grMCP", mode = 20, ...))
   out <- rbind(out, stat.xgboost(X, X_k, y))
+  if (ret.copy)
+    return(list(Wmat = out, combined = combination_function(out)))
   return(combination_function(out))
 }
 
