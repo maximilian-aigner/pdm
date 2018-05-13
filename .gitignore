@@ -54,6 +54,18 @@ vignettes/*.pdf
 /datasim/hapmap3_r2_b36/*
 
 # fastPHASE output
+/datasim/fastPHASE
+datasim/fastPHASE
+datasim/fastPHASE/
 /datasim/fastPHASE/
 /datasim/fastPHASE/*
 /datasim/fastPHASE/OUTPUT_fastPHASE_finallikelihoods
+datasim/fastPHASE/OUTPUT_fastPHASE_alphahat.txt
+datasim/fastPHASE/OUTPUT_fastPHASE_alphahat.txt
+datasim/fastPHASE/OUTPUT_fastPHASE_finallikelihoods
+datasim/fastPHASE/OUTPUT_fastPHASE_alphahat.txt
+datasim/fastPHASE/OUTPUT_fastPHASE_origchars
+packages/grpreg_3.1-3.tar.gz
+packages/knockoff_0.3.0.tar.gz
+packages/SNPknock_0.5.1.tar.gz
+packages/snpStats_1.28.0.tar.gz

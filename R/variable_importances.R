@@ -1,7 +1,7 @@
 library(knockoff)
 library(caret)
 
-combine_VIs <- function(X, X_k, y, combination_function) {
+stat.combined <- function(X, X_k, y, combination_function, ret.copy = FALSE) {
   out <- c()
   #out <- rbind(out, stat.random_forest(X, X_k, y))
   #out <- rbind(out, stat.stability_selection(X, X_k, y))
@@ -9,32 +9,62 @@ combine_VIs <- function(X, X_k, y, combination_function) {
   out <- rbind(out, stat.glmnet_coefdiff(X, X_k, y))
   out <- rbind(out, stat.glmnet_lambdadiff(X, X_k, y))
   out <- rbind(out, stat.glmnet_coefdiff(X, X_k, y, alpha = 0))
+  out <- rbind(out, stat.xgboost(X, X_k, y))
+  if (ret.copy)
+    return(list(Wmat = out, combined = combination_function(out)))
   return(combination_function(out))
 }
 
-max_combination <- function(Wmat) {
+stat.combined.groups <- function(X, X_k, y, groups, combination_function, ret.copy = FALSE, ...) {
+  out <- c()
+  out <- rbind(out, stat.group_logit_lasso(X, X_k, y, groups, penalty = "grMCP", mode = 20, ...))
+  out <- rbind(out, stat.xgboost(X, X_k, y))
+  if (ret.copy)
+    return(list(Wmat = out, combined = combination_function(out)))
+  return(combination_function(out))
+}
+
+combine.max <- function(Wmat) {
   W <- apply(Wmat, 2, max)
   return(W)
 }
 
-prod_combination <- function(Wmat) {
+combine.prod <- function(Wmat) {
   W <- apply(Wmat, 2, prod)
 }
 
-stats.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode = "best", ...) {
+combine.weighted <- function(Wmat, type = "sum", weights = "sd") {
+  if (weights == "sd")
+    weights <- 1.0/apply(Wmat, 1, stats::sd)
+  else if (weights == "range")
+    weights <- 1.0/apply(Wmat, 1, function(row) max(row) - min(row))
+  else if (weights == "var")
+    weights <- 1.0/apply(Wmat, 1, stats::var)
+  # don't forget to normalise weights, you dummy
+  weights <- weights * 1/sum(weights)
+  if (type == "sum")
+    Wfinal <- colSums(weights*Wmat)
+  else if (type == "mean")
+    Wfinal <- colMeans(weights*Wmat)
+  return(list(
+    Wfinal = Wfinal,
+    weights = weights,
+    correlation = cor(t(Wmat))
+  ));
+}
+
+stat.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode = "best", ...) {
   if (is.numeric(mode)) {
-    # minimum guaranteed nonzero coefs (mode = number of them)
-    # heuristic: number of lambdas should be at least 2*mode
     grp.fit <- grpreg(cbind(X, X_k), y, groups, family = "binomial",
-                         penalty=penalty, nlambda = 2*mode, ...)
+                      penalty = penalty, nlambda = mode^2, ...)
     grp.lambdas <- grp.fit$lambda
     min_coefs <- mode
-    n_nzcoefs <- sapply(grp.lambdas, function(l) sum(coef(grp.fit, lambda = l)!=0))
-    chosen.lambda <- max(grp.lambdas[n_nzcoefs>=min_coefs])
+    n_nzcoefs <- sapply(grp.lambdas, function(l) sum(coef(grp.fit, lambda = l) != 0))
+    chosen.lambda <- max(grp.lambdas[n_nzcoefs >= min_coefs])
   } else {
     # assume we are choosing the best (CV sense) lambda
     grp.fit <- cv.grpreg(cbind(X, X_k), y, groups, family = "binomial",
-                         penalty=penalty, ...)
+                         penalty = penalty, ...)
     chosen.lambda <- grp.fit$lambda.min
   }
   Z = coef(grp.fit, lambda = chosen.lambda)
@@ -44,7 +74,7 @@ stats.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode
   return(W)
 }
 
-stats.xgboost <- function(X, X_k, y, n.cv = 4) {
+stat.xgboost <- function(X, X_k, y, n.cv = 4) {
   xgb.control <- trainControl(
     method = 'cv',
     number = n.cv,
@@ -73,4 +103,3 @@ stats.xgboost <- function(X, X_k, y, n.cv = 4) {
   W = abs(Z[orig]) - abs(Z[p + orig])
   return(W)
 }
-
