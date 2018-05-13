@@ -17,7 +17,7 @@ stat.combined <- function(X, X_k, y, combination_function, ret.copy = FALSE) {
 
 stat.combined.groups <- function(X, X_k, y, groups, combination_function, ret.copy = FALSE, ...) {
   out <- c()
-  out <- rbind(out, stat.group_logit_lasso(X, X_k, y, groups, penalty = "grMCP", mode = 20, ...))
+  out <- rbind(out, stat.group_logit_lasso(X, X_k, y, groups, penalty = "grMCP", mode = "best", ...))
   out <- rbind(out, stat.xgboost(X, X_k, y))
   if (ret.copy)
     return(list(Wmat = out, combined = combination_function(out)))
