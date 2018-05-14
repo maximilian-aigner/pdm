@@ -43,9 +43,10 @@ names(total.groups) <- c(names(groups), paste0(names(groups), "_knockoff"))
 total.groups <- as.factor(total.groups)
 
 # Compute W-statistic
-# W = stat.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = "cMCP", mode = 20)
-Wo <- stat.combined.groups(X, Xk, phenotypes, total.groups, combine.prod, ret.copy = TRUE)
-W <- Wo$combined
+W = stat.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = "grLasso", mode = 5:20)
+
+# Wo <- stat.combined.groups(X, Xk, phenotypes, total.groups, combine.prod, ret.copy = TRUE)
+# W <- Wo$combined
 
 # Threshold
 thresh <- knockoff.threshold(W, fdr = 0.1, offset = 0)

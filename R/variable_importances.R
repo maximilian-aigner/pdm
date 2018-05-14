@@ -54,9 +54,10 @@ combine.weighted <- function(Wmat, type = "sum", weights = "sd") {
 }
 
 highest.lambda <- function(fit, nnz) {
-  lambdas <- fit$lambdas
+  lambdas <- fit$lambda
   nnz_per_lambda <- sapply(lambdas, function(l) sum(coef(fit, lambda = l) != 0))
-  return(lambda = max(lambdas[nnz_per_lambda >= nnz]), idx = which(lambda == lambdas))
+  lambda = max(lambdas[nnz_per_lambda >= nnz])
+  return(list(lambda = lambda, idx = which(lambda == lambdas)))
 }
 
 stat.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode = "best", ...) {
@@ -75,7 +76,7 @@ stat.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode 
       coef.matrix <- c()
       for (i in seq_along(mode)) {
         current.nnz <- mode[i]
-        grp.fit <- grpreg(cbind(X, X_k), y, groups, family = "binomial", penalty = penalty, nlambda = 10 + current_nnz^2, ...)
+        grp.fit <- grpreg(cbind(X, X_k), y, groups, family = "binomial", penalty = penalty, nlambda = 30 + current.nnz^2, ...)
         hl <- highest.lambda(grp.fit, current.nnz)
         selected.lambdas[i] <- hl$lambda
         losses[i] <- grp.fit$loss[hl$idx]
