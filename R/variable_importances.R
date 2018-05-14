@@ -18,7 +18,7 @@ stat.combined <- function(X, X_k, y, combination_function, ret.copy = FALSE) {
 stat.combined.groups <- function(X, X_k, y, groups, combination_function, ret.copy = FALSE, ...) {
   out <- c()
   out <- rbind(out, stat.group_logit_lasso(X, X_k, y, groups, penalty = "grMCP", mode = "best", ...))
-  out <- rbind(out, stat.xgboost(X, X_k, y))
+  out <- rbind(out, stat.xgboost(X, X_k, y, n.cv = 2))
   if (ret.copy)
     return(list(Wmat = out, combined = combination_function(out)))
   return(combination_function(out))
@@ -53,19 +53,44 @@ combine.weighted <- function(Wmat, type = "sum", weights = "sd") {
   ));
 }
 
+highest.lambda <- function(fit, nnz) {
+  lambdas <- fit$lambdas
+  nnz_per_lambda <- sapply(lambdas, function(l) sum(coef(fit, lambda = l) != 0))
+  return(lambda = max(lambdas[nnz_per_lambda >= nnz]), idx = which(lambda == lambdas))
+}
+
 stat.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode = "best", ...) {
   if (is.numeric(mode)) {
-    grp.fit <- grpreg(cbind(X, X_k), y, groups, family = "binomial",
-                      penalty = penalty, nlambda = mode^2, ...)
-    grp.lambdas <- grp.fit$lambda
-    min_coefs <- mode
-    n_nzcoefs <- sapply(grp.lambdas, function(l) sum(coef(grp.fit, lambda = l) != 0))
-    chosen.lambda <- max(grp.lambdas[n_nzcoefs >= min_coefs])
+    if (length(mode) == 1) {
+      grp.fit <- grpreg(cbind(X, X_k), y, groups, family = "binomial",
+                        penalty = penalty, nlambda = 10 + mode^2, ...)
+      chosen.lambda <- highest.lambda(grp.fit, mode)
+      Z = coef(grp.fit, lambda = chosen.lambda)
+    } else {
+      # mode contains several values of nnz
+      # for each, compute the lowest lambda
+      # select the one with least error among these lambdas
+      selected.lambdas <- c()
+      losses <- c()
+      coef.matrix <- c()
+      for (i in seq_along(mode)) {
+        current.nnz <- mode[i]
+        grp.fit <- grpreg(cbind(X, X_k), y, groups, family = "binomial", penalty = penalty, nlambda = 10 + current_nnz^2, ...)
+        hl <- highest.lambda(grp.fit, current.nnz)
+        selected.lambdas[i] <- hl$lambda
+        losses[i] <- grp.fit$loss[hl$idx]
+        coef.matrix <- rbind(coef.matrix, coef(grp.fit, lambda = hl$lambda))
+      }
+      least.loss.index <- which(losses == min(losses))
+      chosen.lambda <- selected.lambdas[least.loss.index]
+      Z <- coef.matrix[least.loss.index, ]
+    }
   } else {
     # assume we are choosing the best (CV sense) lambda
     grp.fit <- cv.grpreg(cbind(X, X_k), y, groups, family = "binomial",
                          penalty = penalty, ...)
     chosen.lambda <- grp.fit$lambda.min
+    Z = coef(grp.fit, lambda = chosen.lambda)
   }
   Z = coef(grp.fit, lambda = chosen.lambda)
   p = dim(X)[2]
