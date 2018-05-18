@@ -65,7 +65,7 @@ stat.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode 
     if (length(mode) == 1) {
       grp.fit <- grpreg(cbind(X, X_k), y, groups, family = "binomial",
                         penalty = penalty, nlambda = 10 + mode^2, ...)
-      chosen.lambda <- highest.lambda(grp.fit, mode)
+      chosen.lambda <- highest.lambda(grp.fit, mode)$lambda
       Z = coef(grp.fit, lambda = chosen.lambda)
     } else {
       # mode contains several values of nnz

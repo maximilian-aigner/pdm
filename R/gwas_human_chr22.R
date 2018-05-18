@@ -31,7 +31,7 @@ snpsum.col <- snpsum.col[idx.kept, ]
 X = as(genotypes, "numeric")
 
 # Generate groups by clustering
-groups <- grouping.annotations(X)
+groups <- grouping.annotations(X, singletons.aggregate = TRUE)
 
 # Generate knockoffs
 Xk = invisible(hmm.knockoffs(X))
@@ -43,7 +43,7 @@ names(total.groups) <- c(names(groups), paste0(names(groups), "_knockoff"))
 total.groups <- as.factor(total.groups)
 
 # Compute W-statistic
-W = stat.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = "grLasso", mode = 5:20)
+W = stat.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = "cMCP", mode = 10)
 
 # Wo <- stat.combined.groups(X, Xk, phenotypes, total.groups, combine.prod, ret.copy = TRUE)
 # W <- Wo$combined
