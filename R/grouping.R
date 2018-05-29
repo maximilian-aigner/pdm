@@ -19,17 +19,25 @@ grouping.clusters <- function(X, corr_max = 0.75, method = "single", draw.mode =
   return(clusters)
 }
 
-grouping.annotations <- function(X, legend_file="./datasim/working_dataset/hapgen2/generated_output.legend", verbose = FALSE) {
+grouping.annotations <- function(X, legend_file="./datasim/working_dataset/hapgen2/generated_output.legend", singletons.aggregate = TRUE, verbose = FALSE) {
   ann.df <- read.table(legend_file, sep = ' ', header = TRUE, stringsAsFactors = FALSE)
   ann.df <- cbind(chr = rep("chr22", nrow(ann.df)), ann.df[, c("rs", "pos")])
   annotations <- annotate.snps_with_genes(ann.df)
   annotations <- annotations[complete.cases(annotations), ]
+  # copy <- rep("SINGLES", length(colnames(X)))
   copy <- colnames(X)
   names(copy) <- colnames(X)
   copy <- mapvalues(copy, annotations$names, annotations$GENESYMBOL, warn_missing = FALSE)
+  if (singletons.aggregate)
+    copy[copy == names(copy)] <- "SINGLES"
   if (verbose) {
-    n.unchanged <- sum(names(copy) == copy)
-    n.changed <- length(copy) - n.unchanged
+    if (singletons.aggregate) {
+      n.singletons <- sum(copy == "SINGLES")
+      n.changed <- length(copy) - n.singletons
+    } else {
+      n.unchanged <- sum(names(copy) == copy)
+      n.changed <- length(copy) - n.unchanged
+    }
     rat.changed <- n.changed/length(copy)
     cat("Annotated", n.changed, "SNPs — ", rat.changed * 100, "%.\n")
   }
