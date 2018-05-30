@@ -1,5 +1,5 @@
 library(knockoff)
-library(caret)
+library(caret, warn.conflicts = FALSE)
 
 stat.combined <- function(X, X_k, y, combination_function, ret.copy = FALSE) {
   out <- c()

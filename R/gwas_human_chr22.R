@@ -1,8 +1,8 @@
-library(snpStats)
-library(knockoff)
-library(grpreg)
-library(glmnet)
-library(plyr)
+library(snpStats, warn.conflicts = FALSE)
+library(knockoff, warn.conflicts = FALSE)
+library(grpreg, warn.conflicts = FALSE)
+library(glmnet, warn.conflicts = FALSE)
+library(plyr, warn.conflicts = FALSE)
 
 source('./R/variable_importances.R')
 source('./R/utils.R')

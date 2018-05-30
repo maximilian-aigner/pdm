@@ -1,4 +1,4 @@
-library(SNPknock)
+library(SNPknock, warn.conflicts = FALSE)
 
 fprintf <- function(fmt, ..., file = "", append = FALSE) {
   mystr <- sprintf(fmt, ...)
@@ -8,19 +8,22 @@ fprintf <- function(fmt, ..., file = "", append = FALSE) {
 
 hmm.knockoffs <- function(X, ...) {
   # run fastPHASE
-  Xout_path <- "./datasim/fastPHASE/OUTPUT_fastPHASE/X_input"
+  # Xout_path <- "./datasim/fastPHASE/OUTPUT_fastPHASE/X_input"
+  # fp_output_path = "./datasim/fastPHASE/OUTPUT_fastPHASE"
+  # fp_outPath = SNPknock.fp.runFastPhase(fp_path, Xinp_file, out_path = fp_output_path, K = 8, numit = 10, ...)
+  
+  storage.mode(X) <- "integer"
   Xinp_file = SNPknock.fp.writeX(X)
   fp_path  = "./datasim/fastPHASE/fastPHASE.bin"
-  fp_output_path = "./datasim/fastPHASE/OUTPUT_fastPHASE"
-  fp_outPath = SNPknock.fp.runFastPhase(fp_path, Xinp_file, out_path = fp_output_path, K = 8, numit = 10, ...)
+  fp_outPath = SNPknock.fp.runFastPhase(fp_path, Xinp_file, K = 8, numit = 10)
   
   r_file = paste(fp_outPath, "_rhat.txt", sep="")
   theta_file = paste(fp_outPath, "_thetahat.txt", sep="")
   alpha_file = paste(fp_outPath, "_alphahat.txt", sep="")
   char_file = paste(fp_outPath, "_origchars", sep="")
-  hmm = SNPknock.fp.loadFit(r_file, theta_file, alpha_file, X[1,])
+  hmm = SNPknock.fp.loadFit(r_file, theta_file, alpha_file, char_file)
   
-  Xk = SNPknock.knockoffHMM(X, hmm$pInit, hmm$Q, hmm$pEmit)
+  Xk = SNPknock.knockoffGenotypes(X, hmm$r, hmm$alpha, hmm$theta)
   return(Xk)
 }
 
