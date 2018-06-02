@@ -8,34 +8,41 @@ source('./R/variable_importances.R')
 source('./R/utils.R')
 source('./R/grouping.R')
 source('./R/qc.R')
+source('./R/import_data.R')
 
 # set.seed(43192)
 
-# Read in files
-data.dir <- './datasim/working_dataset/hapgen2/'
-dat.cases <- read.impute(paste0(data.dir, 'generated_output.cases.gen'))
-dat.contr <- read.impute(paste0(data.dir, 'generated_output.controls.gen'))
-row.names(dat.cases) <- paste("Case", 1:dim(dat.cases)[1])
-row.names(dat.contr) <- paste("Control", 1:dim(dat.contr)[1])
-genotypes = rbind(dat.contr, dat.cases)
-phenotypes = c(rep(0,dim(dat.contr)[1]), rep(1,dim(dat.cases)[1]))
-snpsum.col <- col.summary(genotypes)
+if (!file.exists('./preload/saveX.rda')) {
+  # Re-do data import step
+  loaded <- import.data()
+  X <- loaded$X
+  phenotypes <- loaded$phenotypes
+  
+  # Save the R objects for future
+  save(X, phenotypes, file = './preload/saveX.rda')
+} else {
+  load('./preload/saveX.rda')
+}
 
-# Quality controls
-idx.kept <- qc(genotypes)
-genotypes <- genotypes[, idx.kept]
-snpsum.col <- snpsum.col[idx.kept, ]
+if (!file.exists('./preload/savegroups.rda')) {
+  # Generate groups by clustering
+  groups <- grouping.annotations(X, singletons.aggregate = TRUE)
+  
+  save(groups, file = './preload/savegroups.rda')
+} else {
+  load('./preload/savegroups.rda')
+}
 
-
-# Now, analyse the remaining columns
-X = as(genotypes, "numeric")
-
-# Generate groups by clustering
-groups <- grouping.annotations(X, singletons.aggregate = FALSE)
-
-# Generate knockoffs
-Xk = invisible(hmm.knockoffs(X))
-colnames(Xk) <- paste0(colnames(X), "_knockoff")
+if (!file.exists('./preload/saveXk.rda')) {
+  # Generate knockoffs
+  Xk = invisible(hmm.knockoffs(X))
+  colnames(Xk) <- paste0(colnames(X), "_knockoff")
+  
+  # Save for future reference
+  save(Xk, file = './preload/saveXk.rda')
+} else {
+  load('./preload/saveXk.rda')
+}
 
 # Group knockoffs as the originals, but not paired with them
 total.groups <- c(groups, paste0(groups, "_knockoff"))
@@ -43,13 +50,28 @@ names(total.groups) <- c(names(groups), paste0(names(groups), "_knockoff"))
 total.groups <- as.factor(total.groups)
 
 # Compute W-statistic
-W = stat.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = "cMCP", mode = 10)
+wanted.plots <- list(
+  list(
+    penalty = "grLasso", mode = "best"  
+  ),
+  list(
+    penalty = "grLasso", mode = 1:20
+  ),
+  list(
+    penalty = "cMCP", mode = "best"
+  )
+)
+
+W <- c()
+for (config in wanted.plots) {
+  W = rbind(W, stat.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = config$penalty, mode = config$mode))
+}
 
 # Wo <- stat.combined.groups(X, Xk, phenotypes, total.groups, combine.prod, ret.copy = TRUE)
 # W <- Wo$combined
 
 # Threshold
-thresh <- knockoff.threshold(W, fdr = 0.1, offset = 0)
+thresh <- knockoff.threshold(W, fdr = 0.5, offset = 0)
 
 names(W) <- colnames(X)
 outcomes <- plot.discoveries(W, thresh)
