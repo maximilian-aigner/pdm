@@ -1,7 +1,7 @@
 #!/bin/bash
 
 n_active_genes=10
-n_snps=10000
+n_snps=50000
 n_controls=300
 n_cases=450
 
