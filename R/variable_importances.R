@@ -91,7 +91,6 @@ stat.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode 
     grp.fit <- cv.grpreg(cbind(X, X_k), y, groups, family = "binomial",
                          penalty = penalty, ...)
     chosen.lambda <- grp.fit$lambda.min
-    Z = coef(grp.fit, lambda = chosen.lambda)
   }
   Z = coef(grp.fit, lambda = chosen.lambda)
   p = dim(X)[2]

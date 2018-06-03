@@ -70,8 +70,8 @@ for (config in wanted.plots) {
   W = rbind(W, stat.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = config$penalty, mode = config$mode))
 }
 
-# Wo <- stat.combined.groups(X, Xk, phenotypes, total.groups, combine.prod, ret.copy = TRUE)
-# W <- Wo$combined
+# Wmat.combined <- stat.combined.groups(X, Xk, phenotypes, total.groups, combine.weighted, ret.copy = TRUE)
+# W.combined <- Wmat.combined$combined
 
 # Threshold
 thresh <- knockoff.threshold(W, fdr = 0.5, offset = 0)
