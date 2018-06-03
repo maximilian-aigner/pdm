@@ -27,11 +27,11 @@ hmm.knockoffs <- function(X, ...) {
   return(Xk)
 }
 
-plot.discoveries <- function(W, t, plotit = TRUE, fname = "datasim/working_dataset/active_genes.txt") {
+plot.discoveries <- function(W, t, plotit = TRUE) {
   discoveries = which(W >= t)
   names(discoveries) = names(W)[discoveries]
 
-  real <- read.table(fname, header = TRUE, stringsAsFactors = FALSE)
+  real <- get.active.snps()
   signals <- real$rs
   signals.id <- match(signals, names(W))
   names(signals.id) <- signals
@@ -41,7 +41,7 @@ plot.discoveries <- function(W, t, plotit = TRUE, fname = "datasim/working_datas
     points(signals.id, W[signals.id], col = "green", pch = 0)
     points(discoveries, W[discoveries], col = "blue", pch = 4)
   }
-  return(list(discoveries=discoveries, signals=signals.id))
+  return(list(discoveries = discoveries, signals = signals.id))
 }
 
 empirical.fdr <- function(W, t, ...) {
@@ -49,4 +49,9 @@ empirical.fdr <- function(W, t, ...) {
   false <- setdiff(outcomes$signals, outcomes$discoveries)
   empirical <- length(false)/length(discoveries)
   return(empirical)
+}
+
+get.active.snps <- function(fname = "datasim/working_dataset/active_genes.txt") {
+  real <- read.table(fname, header = TRUE, stringsAsFactors = FALSE)
+  return(real)
 }
