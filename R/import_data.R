@@ -12,9 +12,9 @@ import.data <- function() {
   genotypes = rbind(dat.contr, dat.cases)
   phenotypes = c(rep(0,dim(dat.contr)[1]), rep(1,dim(dat.cases)[1]))
   
+  
   idx.kept <- qc(genotypes)
   genotypes <- genotypes[, idx.kept]
-  snpsum.col <- snpsum.col[idx.kept, ]
   X = as(genotypes, "numeric")
   return(list(X = X, phenotypes = phenotypes))
 }
