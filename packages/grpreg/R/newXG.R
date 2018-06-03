@@ -29,6 +29,7 @@ newXG <- function(X, g, m, ncolY, bilevel) {
   nz <- which(scale > 1e-6)                # non-constant columns
   zg <- setdiff(unique(g), unique(g[nz]))  # constant groups
   if (length(zg)) {
+    # cat("Found constant groups (length(zg) = ", length(zg), ")\n")
     gf <- factor(g[!(g %in% zg)])
     if (any(levels(gf)=="0")) {
       g <- as.numeric(gf) - 1
@@ -38,7 +39,16 @@ newXG <- function(X, g, m, ncolY, bilevel) {
     m <- m[-zg]
   }
   if (length(nz) != ncol(X)) {
+    cat("dropping zeroes:")
+    problems<-setdiff(1:ncol(X), nz)
+    print(problems)
+    # cat("because scales=")
+    # print(scale[problems])
+
+
     XX <- XX[ ,nz, drop=FALSE]
+    # change g also
+    g <- g[nz]
   }
   if (!bilevel) {
     XX <- orthogonalize(XX, g)

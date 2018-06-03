@@ -4,9 +4,13 @@ orthogonalize <- function(X, group) {
   T <- vector("list", J)
   XX <- matrix(0, nrow=nrow(X), ncol=ncol(X))
   XX[,which(group==0)] <- X[,which(group==0)]
+  # cat("dim(X) = ")
+  # print(dim(X))
   for (j in seq_along(numeric(J))) {
+    # cat("Examining group j = ", j, "\n")
     ind <- which(group==j)
     if (length(ind)==0) next
+    # print(ind)
     SVD <- svd(X[, ind, drop=FALSE], nu=0)
     r <- which(SVD$d > 1e-10)
     T[[j]] <- sweep(SVD$v[,r,drop=FALSE], 2, sqrt(n)/SVD$d[r], "*")
