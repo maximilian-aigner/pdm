@@ -26,7 +26,7 @@ if (!file.exists('./preload/saveX.rda')) {
 
 if (!file.exists('./preload/savegroups.rda')) {
   # Generate groups by clustering
-  groups <- grouping.annotations(X, singletons.aggregate = TRUE)
+  groups <- grouping.annotations(X, singletons.aggregate = FALSE)
   
   save(groups, file = './preload/savegroups.rda')
 } else {
@@ -59,6 +59,9 @@ wanted.plots <- list(
   ),
   list(
     penalty = "cMCP", mode = "best"
+  ),
+  list(
+    penalty = "cMCP", mode = 10:20
   )
 )
 
