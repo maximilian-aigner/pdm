@@ -42,10 +42,17 @@ newXG <- function(X, g, m, ncolY, bilevel) {
     cat("dropping zeroes:")
     problems<-setdiff(1:ncol(X), nz)
     print(problems)
-    # cat("because scales=")
-    # print(scale[problems])
-
-
+    cat("because scales=")
+    print(scale[problems])
+    if (length(problems) == 1) {
+      if (problems> ncol(X)/2)
+        problems <- c(problems, problems-ncol(X)/2)
+      else
+        problems <- c(problems, problems+ncol(X)/2)
+      cat("Removing both:")
+      print(problems)
+      nz <- setdiff(nz, problems)
+    }
     XX <- XX[ ,nz, drop=FALSE]
     # change g also
     g <- g[nz]
