@@ -27,7 +27,7 @@ hmm.knockoffs <- function(X, ...) {
   return(Xk)
 }
 
-plot.discoveries <- function(W, t, plotit = TRUE) {
+plot.discoveries <- function(W, t, plotit = TRUE, ...) {
   discoveries = which(W >= t)
   names(discoveries) = names(W)[discoveries]
 
@@ -37,7 +37,7 @@ plot.discoveries <- function(W, t, plotit = TRUE) {
   names(signals.id) <- signals
   
   if (plotit) { 
-    plot(W, col = "gray", pch = 16, cex = 1); abline(h = t, lty = 2)
+    plot(W, col = "gray", pch = 16, cex = 1, ...); abline(h = t, lty = 2)
     points(signals.id, W[signals.id], col = "green", pch = 0)
     points(discoveries, W[discoveries], col = "blue", pch = 4)
   }
