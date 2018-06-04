@@ -70,6 +70,11 @@ for (config in wanted.plots) {
   W = rbind(W, stat.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = config$penalty, mode = config$mode))
 }
 
+layout(matrix(1:4, nrow = 2, byrow = T))
+for (i in 1:3) {
+  t = knockoff.threshold(W[i, ], offset = 0, fdr = .1)
+  plot.discoveries(W[i, ], t = t, main = wanted.plots[i]$penalty)
+}
 # Wmat.combined <- stat.combined.groups(X, Xk, phenotypes, total.groups, combine.weighted, ret.copy = TRUE)
 # W.combined <- Wmat.combined$combined
 
