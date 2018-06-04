@@ -33,14 +33,14 @@ vignettes/*.pdf
 *.knit.md
 
 # Generated PDF files
-*.pdf
+# *.pdf
 
 # Vim swaps
 *.swp
 
 # R files
-.Rproj.user
-*.rda
+# .Rproj.user
+# *.rda
 
 # knockoff package source code
 # /knockoff/
