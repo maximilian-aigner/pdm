@@ -1,4 +1,5 @@
 library(SNPknock, warn.conflicts = FALSE)
+library(scales)
 
 fprintf <- function(fmt, ..., file = "", append = FALSE) {
   mystr <- sprintf(fmt, ...)
@@ -37,9 +38,10 @@ plot.discoveries <- function(W, t, plotit = TRUE, ...) {
   names(signals.id) <- signals
   
   if (plotit) { 
-    plot(W, col = "gray", pch = 16, cex = 1, ...); abline(h = t, lty = 2)
-    points(signals.id, W[signals.id], col = "green", pch = 0)
-    points(discoveries, W[discoveries], col = "blue", pch = 4)
+    plot(W, col = alpha("gray", .5), pch = 16, cex = 1, ylab = expression('W'[j]), xlab = 'j', ...) 
+    abline(h = t, lty = 2)
+    points(signals.id, W[signals.id], col = "#377EB8", pch = 0)
+    points(discoveries, W[discoveries], col = "#E41A1C", pch = 4)
   }
   return(list(discoveries = discoveries, signals = signals.id))
 }
