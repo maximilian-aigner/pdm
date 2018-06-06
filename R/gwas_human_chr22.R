@@ -56,25 +56,27 @@ wanted.plots <- list(
   ),
   list(
     penalty = "grLasso", mode = 1:20
-  ),
-  list(
-    penalty = "cMCP", mode = "best"
-  ),
-  list(
-    penalty = "cMCP", mode = 10:20
   )
 )
+
+penalty.names <- c("grLasso" = "Group Lasso", "cMCP" = "Composite MCP")
 
 W <- c()
 for (config in wanted.plots) {
   W = rbind(W, stat.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = config$penalty, mode = config$mode))
 }
 
-layout(matrix(1:4, nrow = 2, byrow = T))
-for (i in 1:3) {
-  t = knockoff.threshold(W[i, ], offset = 0, fdr = .1)
-  plot.discoveries(W[i, ], t = t, main = wanted.plots[i]$penalty)
+pdf("figures/grlasso_ungrouped.pdf")
+par(cex.main = 1.2, cex.lab = 1.2)
+par(mar = c(5.1, 5.1, 4.1, 2.1))
+ncases <- ceiling(length(wanted.plots)/2)*2
+layout(matrix(1:ncases, ncol = 2, byrow = T))
+for (i in 1:length(wanted.plots)) {
+  t = knockoff.threshold(W[i, ], offset = 0, fdr = .15)
+  plot.discoveries(W[i, ], t = t, main = penalty.names[[wanted.plots[[i]]$penalty]], ylim = c(-0.2, 0.5))
 }
+dev.off()
+
 # Wmat.combined <- stat.combined.groups(X, Xk, phenotypes, total.groups, combine.weighted, ret.copy = TRUE)
 # W.combined <- Wmat.combined$combined
 
