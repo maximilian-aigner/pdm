@@ -26,7 +26,7 @@ if (!file.exists('./preload/saveX.rda')) {
 
 if (!file.exists('./preload/savegroups.rda')) {
   # Generate groups by clustering
-  groups <- grouping.annotations(X, singletons.aggregate = FALSE)
+  groups <- grouping.annotations(X, singletons.aggregate = TRUE)
   
   save(groups, file = './preload/savegroups.rda')
 } else {
@@ -66,11 +66,11 @@ for (config in wanted.plots) {
   W = rbind(W, stat.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = config$penalty, mode = config$mode))
 }
 
-pdf("figures/grlasso_ungrouped.pdf")
+pdf("figures/grlasso_grouped.pdf")
 par(cex.main = 1.2, cex.lab = 1.2)
 par(mar = c(5.1, 5.1, 4.1, 2.1))
 ncases <- ceiling(length(wanted.plots)/2)*2
-layout(matrix(1:ncases, ncol = 2, byrow = T))
+layout(matrix(1:ncases, ncol = 1, byrow = T))
 for (i in 1:length(wanted.plots)) {
   t = knockoff.threshold(W[i, ], offset = 0, fdr = .15)
   plot.discoveries(W[i, ], t = t, main = penalty.names[[wanted.plots[[i]]$penalty]], ylim = c(-0.2, 0.5))
@@ -79,12 +79,6 @@ dev.off()
 
 # Wmat.combined <- stat.combined.groups(X, Xk, phenotypes, total.groups, combine.weighted, ret.copy = TRUE)
 # W.combined <- Wmat.combined$combined
-
-# Threshold
-thresh <- knockoff.threshold(W, fdr = 0.5, offset = 0)
-
-names(W) <- colnames(X)
-outcomes <- plot.discoveries(W, thresh)
 
 # Compare to true active set
 active <- read.table('~/src/pdm/datasim/working_dataset/active_genes.txt',
