@@ -67,6 +67,7 @@ stat.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode 
                         penalty = penalty, nlambda = 10 + mode^2, ...)
       chosen.lambda <- highest.lambda(grp.fit, mode)$lambda
       Z = coef(grp.fit, lambda = chosen.lambda)
+      selection.losses = NULL
     } else {
       # mode contains several values of nnz
       # for each, compute the lowest lambda
@@ -85,18 +86,20 @@ stat.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode 
       least.loss.index <- which(losses == min(losses))
       chosen.lambda <- selected.lambdas[least.loss.index]
       Z <- coef.matrix[least.loss.index, ]
+      selection.losses <- list(lambda = selected.lambdas, loss = losses)
     }
   } else {
     # assume we are choosing the best (CV sense) lambda
     grp.fit <- cv.grpreg(cbind(X, X_k), y, groups, family = "binomial",
                          penalty = penalty, ...)
     chosen.lambda <- grp.fit$lambda.min
+    selection.losses <- list(lambda = grp.fit$lambda, loss = grp.fit$cve)
   }
   Z = coef(grp.fit, lambda = chosen.lambda)
   p = dim(X)[2]
   orig = 2:(p + 1)
   W = abs(Z[orig]) - abs(Z[p + orig])
-  return(W)
+  return(list(W = W, selection.losses = selection.losses))
 }
 
 stat.xgboost <- function(X, X_k, y, n.cv = 4) {
