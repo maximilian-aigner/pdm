@@ -10,7 +10,7 @@ source('./R/grouping.R')
 source('./R/qc.R')
 source('./R/import_data.R')
 
-# set.seed(43192)
+set.seed(43192)
 
 if (!file.exists('./preload/saveX.rda')) {
   # Re-do data import step
@@ -26,7 +26,7 @@ if (!file.exists('./preload/saveX.rda')) {
 
 if (!file.exists('./preload/savegroups.rda')) {
   # Generate groups by clustering
-  groups <- grouping.annotations(X, singletons.aggregate = TRUE)
+  groups <- grouping.annotations(X, singletons.aggregate = FALSE)
   
   save(groups, file = './preload/savegroups.rda')
 } else {
@@ -52,28 +52,28 @@ total.groups <- as.factor(total.groups)
 # Compute W-statistic
 wanted.plots <- list(
   list(
-    penalty = "grLasso", mode = "best"  
+    penalty = "grMCP", mode = "best"  
   ),
   list(
-    penalty = "grLasso", mode = 1:20
+    penalty = "grMCP", mode = 1:20
   )
 )
 
-penalty.names <- c("grLasso" = "Group Lasso", "cMCP" = "Composite MCP")
+penalty.names <- c("grLasso" = "Group Lasso", "cMCP" = "Composite MCP", "grMCP" = "Group MCP")
 
 W <- c()
 for (config in wanted.plots) {
   W = rbind(W, stat.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = config$penalty, mode = config$mode))
 }
 
-pdf("figures/grlasso_grouped.pdf")
+pdf("figures/grMCP_ungrouped.pdf")
 par(cex.main = 1.2, cex.lab = 1.2)
 par(mar = c(5.1, 5.1, 4.1, 2.1))
 ncases <- ceiling(length(wanted.plots)/2)*2
 layout(matrix(1:ncases, ncol = 1, byrow = T))
 for (i in 1:length(wanted.plots)) {
-  t = knockoff.threshold(W[i, ], offset = 0, fdr = .15)
-  plot.discoveries(W[i, ], t = t, main = penalty.names[[wanted.plots[[i]]$penalty]], ylim = c(-0.2, 0.5))
+  t = knockoff.threshold(W[i, ]$W, offset = 0, fdr = .15)
+  plot.discoveries(W[i, ]$W, t = t, main = penalty.names[[wanted.plots[[i]]$penalty]], ylim = c(-0.2, 0.2))
 }
 dev.off()
 
