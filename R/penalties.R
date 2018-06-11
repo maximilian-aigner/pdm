@@ -1,3 +1,5 @@
+library(RColorBrewer)
+
 dim.b <- 10
 
 colors <- brewer.pal(n = 5, name = "Set1")
@@ -36,8 +38,7 @@ loadfonts()
 pdf('figures/losses.pdf')
 par(cex.main = 1.5, cex.lab = 1.5)
 par(mar=c(5.1, 5.1, 4.1, 2.1))
-plot(mults, rep(0, length(mults)), type = 'l', lty = 1, ylim = c(0, 2), xlab = expression(beta), ylab = expression(loss(beta)),
-     main = "Comparison of penalties")
+plot(mults, rep(0, length(mults)), type = 'l', lty = 1, ylim = c(0, 2), xlab = expression(beta), ylab = expression(loss(beta)))
 lapply(losses, function(loss) {
   y <- sapply(mults, function(t) loss$f(t, 1))
   lines(mults, y, col = loss$color)
