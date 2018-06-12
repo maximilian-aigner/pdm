@@ -26,7 +26,7 @@ if (!file.exists('./preload/saveX.rda')) {
 
 if (!file.exists('./preload/savegroups.rda')) {
   # Generate groups by clustering
-  groups <- grouping.annotations(X, singletons.aggregate = TRUE)
+  groups <- grouping.annotations(X, singletons.aggregate = FALSE)
   
   save(groups, file = './preload/savegroups.rda')
 } else {
@@ -50,11 +50,23 @@ names(total.groups) <- c(names(groups), paste0(names(groups), "_knockoff"))
 total.groups <- as.factor(total.groups)
 
 # Compute W-statistic
-W = stat.combined.groups(X, Xk, phenotypes, total.groups, combine.weighted)
+W = stat.combined(X, Xk, phenotypes, combine.weighted, ret.copy = TRUE)
+
+# Plot discoveries
 pdf("figures/combinedW_grlasso_cMCP_xgboost.pdf")
-t = knockoff.threshold(W$combined, offset = 0, fdr = .15)
-plot.discoveries(W$combined, t = t)
+t = knockoff.threshold(W$combined$Wfinal, offset = 0, fdr = .15)
+disc.obj <- plot.discoveries(W$combined$Wfinal, t = t)
 dev.off()
+
+# Compare to true active set
+active <- read.table('~/src/pdm/datasim/working_dataset/active_genes.txt',
+                     stringsAsFactors = FALSE, header = TRUE, sep = ' ')
+active.genes <- unique(active$GENESYMBOL)
+active.genes.snps <- which(groups %in% active.genes)
+names(active.genes.snps) <- names(groups[active.genes.snps])
+
+indirect.good <- intersect(names(disc.obj$discoveries), names(active.genes.snps))
+actual.fdp <- length(indirect.good) / length(disc.obj$discoveries)
 
 # W <- c()
 # for (config in wanted.plots) {
@@ -73,13 +85,3 @@ dev.off()
 #                   ylim = c(-.3, .2))
 #  }
 #dev.off()
-
-# Wmat.combined <- stat.combined.groups(X, Xk, phenotypes, total.groups, combine.weighted, ret.copy = TRUE)
-# W.combined <- Wmat.combined$combined
-
-# Compare to true active set
-active <- read.table('~/src/pdm/datasim/working_dataset/active_genes.txt',
-                     stringsAsFactors = FALSE, header = TRUE, sep = ' ')
-active.genes <- unique(active$GENESYMBOL)
-active.genes.snps <- which(groups %in% active.genes)
-names(active.genes.snps) <- names(groups[active.genes.snps])
