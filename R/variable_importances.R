@@ -3,12 +3,12 @@ library(caret, warn.conflicts = FALSE)
 
 stat.combined <- function(X, X_k, y, combination_function, ret.copy = FALSE) {
   out <- c()
-  #out <- rbind(out, stat.random_forest(X, X_k, y))
-  #out <- rbind(out, stat.stability_selection(X, X_k, y))
-  out <- rbind(out, stat.sqrt_lasso(X, X_k, y))
-  out <- rbind(out, stat.glmnet_coefdiff(X, X_k, y))
-  out <- rbind(out, stat.glmnet_lambdadiff(X, X_k, y))
-  out <- rbind(out, stat.glmnet_coefdiff(X, X_k, y, alpha = 0))
+  # out <- rbind(out, stat.random_forest(X, X_k, y))
+  # out <- rbind(out, stat.stability_selection(X, X_k, y))
+  # out <- rbind(out, stat.sqrt_lasso(X, X_k, y))
+  out <- rbind(out, stat.glmnet_coefdiff(X, X_k, y)) # lasso
+  out <- rbind(out, stat.glmnet_lambdadiff(X, X_k, y)) # diff of lambdas
+  out <- rbind(out, stat.glmnet_coefdiff(X, X_k, y, alpha = 0)) # ridge
   out <- rbind(out, stat.xgboost(X, X_k, y))
   if (ret.copy)
     return(list(Wmat = out, combined = combination_function(out)))
@@ -17,8 +17,9 @@ stat.combined <- function(X, X_k, y, combination_function, ret.copy = FALSE) {
 
 stat.combined.groups <- function(X, X_k, y, groups, combination_function, ret.copy = FALSE, ...) {
   out <- c()
-  out <- rbind(out, stat.group_logit_lasso(X, X_k, y, groups, penalty = "grMCP", mode = "best", ...))
-  out <- rbind(out, stat.xgboost(X, X_k, y, n.cv = 2))
+  out <- rbind(out, stat.group_logit_lasso(X, X_k, y, groups, penalty = "grLasso", mode = 1:20, ...))
+  out <- rbind(out, stat.group_logit_lasso(X, X_k, y, groups, penalty = "cMCP"))
+  out <- rbind(out, stat.xgboost(X, X_k, y, n.cv = 4))
   if (ret.copy)
     return(list(Wmat = out, combined = combination_function(out)))
   return(combination_function(out))

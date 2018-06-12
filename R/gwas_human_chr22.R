@@ -50,47 +50,29 @@ names(total.groups) <- c(names(groups), paste0(names(groups), "_knockoff"))
 total.groups <- as.factor(total.groups)
 
 # Compute W-statistic
-wanted.plots <- list(
-  list(
-    penalty = "grLasso", mode = "best"  
-  ),
-  list(
-    penalty = "grLasso", mode = 1:20
-  ),
-  list(
-    penalty = "grMCP", mode = "best"  
-  ),
-  list(
-    penalty = "grMCP", mode = 1:20
-  ),
-  list(
-    penalty = "grSCAD", mode = "best"  
-  ),
-  list(
-    penalty = "grSCAD", mode = 1:20
-  )
-)
-
-penalty.names <- c("grLasso" = "Group Lasso", "cMCP" = "Composite MCP", "grMCP" = "Group MCP", "grSCAD" = "Group SCAD",
-                   "cMCP" = "Composite MCP", "gel" = "Group exponential Lasso")
-
-W <- c()
-for (config in wanted.plots) {
-  W = rbind(W, stat.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = config$penalty, mode = config$mode))
-}
-
-pdf("figures/groupselection_aggregated.pdf")
-  par(cex.main = 1.2, cex.lab = 1.2)
-  par(mar = c(5.1, 5.1, 3.1, 2.1))
-  ncases <- ceiling(length(wanted.plots)/2)*2
-  layout(matrix(1:ncases, ncol = 2, byrow = T))
-  for (i in 1:length(wanted.plots)) {
-    t = knockoff.threshold(W[i, ]$W, offset = 0, fdr = .15)
-    plot.discoveries(W[i, ]$W, t = t,
-                   #main = penalty.names[[wanted.plots[[i]]$penalty]], 
-                   ylim = c(-.3, .2))
-  }
+W = stat.combined.groups(X, Xk, phenotypes, total.groups, combine.weighted)
+pdf("figures/combinedW_grlasso_cMCP_xgboost.pdf")
+t = knockoff.threshold(W$combined, offset = 0, fdr = .15)
+plot.discoveries(W$combined, t = t)
 dev.off()
+
+# W <- c()
+# for (config in wanted.plots) {
+#   W = rbind(W, stat.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = config$penalty, mode = config$mode))
+# }
+
+#pdf("figures/combinedW_aggregated.pdf")
+#  par(cex.main = 1.2, cex.lab = 1.2)
+#  par(mar = c(5.1, 5.1, 3.1, 2.1))
+#  ncases <- ceiling(length(wanted.plots)/2)*2
+#  layout(matrix(1:ncases, ncol = 2, byrow = T))
+#  for (i in 1:length(wanted.plots)) {
+#    t = knockoff.threshold(W[i, ]$W, offset = 0, fdr = .15)
+#    plot.discoveries(W[i, ]$W, t = t,
+                   #main = penalty.names[[wanted.plots[[i]]$penalty]], 
+#                   ylim = c(-.3, .2))
+#  }
+#dev.off()
 
 # Wmat.combined <- stat.combined.groups(X, Xk, phenotypes, total.groups, combine.weighted, ret.copy = TRUE)
 # W.combined <- Wmat.combined$combined
