@@ -1,6 +1,8 @@
 orthogonalize <- function(X, group) {
   n <- nrow(X)
+  cat("[orthogonalize.R] size of `group`:", length(group), "\n")
   J <- max(group)
+  cat("[orthogonalize.R] number of groups:", J, "\n")
   T <- vector("list", J)
   XX <- matrix(0, nrow=nrow(X), ncol=ncol(X))
   XX[,which(group==0)] <- X[,which(group==0)]
