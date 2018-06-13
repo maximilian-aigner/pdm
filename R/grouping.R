@@ -4,6 +4,12 @@ source('./R/annotation.R')
 grouping.clusters <- function(X, corr_max = 0.75, method = "single", draw.mode = 0, ...) {
   # Use clusters as groups
   Sigma <- cov(X)
+  if (any(diag(Sigma) == 0)) {
+    bad.columns <- which(diag(Sigma) == 0)
+    X <- X[, -bad.columns]
+    Sigma <- Sigma[-bad.columns,-bad.columns]
+    cat("Dropped columns:", paste(bad.columns))
+  }
   cov.cor <- cov2cor(Sigma)
   Sigma.distance <- as.dist(1 - abs(cov.cor))
   fit <- hclust(Sigma.distance, method = method)
@@ -16,7 +22,7 @@ grouping.clusters <- function(X, corr_max = 0.75, method = "single", draw.mode =
     hist(log10(clusters), xlim = rev(range(log10(clusters))),
          xlab = "log(group size)", ylab = "", col = "gray", main = "Cluster sizes", ...)
   }
-  return(clusters)
+  return(list(Xmod = X, clusters = clusters))
 }
 
 grouping.annotations <- function(X, legend_file="./datasim/working_dataset/hapgen2/generated_output.legend", singletons.aggregate = TRUE, verbose = FALSE) {
