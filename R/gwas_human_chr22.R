@@ -26,9 +26,11 @@ if (!file.exists('./preload/saveX.rda')) {
 
 if (!file.exists('./preload/savegroups.rda')) {
   # Generate groups by clustering
-  groups <- grouping.annotations(X, singletons.aggregate = FALSE)
+  grouping.obj <- grouping.clusters(X)
+  groups <- grouping.obj$clusters
+  X <- grouping.obj$Xmod
   
-  save(groups, file = './preload/savegroups.rda')
+  save(X, groups, file = './preload/savegroups.rda')
 } else {
   load('./preload/savegroups.rda')
 }
@@ -44,18 +46,66 @@ if (!file.exists('./preload/saveXk.rda')) {
   load('./preload/saveXk.rda')
 }
 
+# problematic index: 13565
+# Xk[, 13565] <- sample(c(0, 1),
+#                       size = length(phenotypes),
+#                       replace = TRUE)
+
 # Group knockoffs as the originals, but not paired with them
 total.groups <- c(groups, paste0(groups, "_knockoff"))
 names(total.groups) <- c(names(groups), paste0(names(groups), "_knockoff"))
 total.groups <- as.factor(total.groups)
 
-# Compute W-statistic
-W = stat.combined(X, Xk, phenotypes, combine.weighted, ret.copy = TRUE)
+# # Compute W-statistic
+# W = stat.combined.group(X, Xk, phenotypes, combine.weighted, ret.copy = TRUE)
+# 
+# # Plot discoveries
+# pdf("figures/combinedW_grlasso_cMCP_xgboost.pdf")
+# t = knockoff.threshold(W$combined$Wfinal, offset = 0, fdr = .15)
+# disc.obj <- plot.discoveries(W$combined$Wfinal, t = t)
+# dev.off()
 
-# Plot discoveries
-pdf("figures/combinedW_grlasso_cMCP_xgboost.pdf")
-t = knockoff.threshold(W$combined$Wfinal, offset = 0, fdr = .15)
-disc.obj <- plot.discoveries(W$combined$Wfinal, t = t)
+wanted.plots <- list(
+  list(
+    penalty = "cMCP",
+    mode = "best"
+  ),
+  list(
+    penalty = "cMCP",
+    mode = 1:20
+  ),
+  list(
+    penalty = "grMCP",
+    mode = "best"
+  ),
+  list(
+    penalty = "grMCP",
+    mode = 1:20
+  ),  list(
+    penalty = "grSCAD",
+    mode = "best"
+  ),  list(
+    penalty = "grSCAD",
+    mode = 1:20
+  )
+)
+
+W <- c()
+for (config in wanted.plots) {
+  cat("[plotting] (", config$penalty, ", ", config$mode, ")\n")
+  W = rbind(W, stat.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = config$penalty, mode = config$mode)$W)
+}
+
+pdf("figures/cluster_groupselection.pdf")
+ par(cex.main = 1.2, cex.lab = 1.2)
+ par(mar = c(5.1, 5.1, 3.1, 2.1))
+ ncases <- ceiling(length(wanted.plots)/2)*2
+ layout(matrix(1:ncases, ncol = 2, byrow = T))
+ for (i in 1:length(wanted.plots)) {
+   t = knockoff.threshold(W[i, ], offset = 0, fdr = .15)
+   plot.discoveries(W[i, ], t = t,
+                  ylim = c(-.5, 1.1))
+ }
 dev.off()
 
 # Compare to true active set
@@ -65,23 +115,5 @@ active.genes <- unique(active$GENESYMBOL)
 active.genes.snps <- which(groups %in% active.genes)
 names(active.genes.snps) <- names(groups[active.genes.snps])
 
-indirect.good <- intersect(names(disc.obj$discoveries), names(active.genes.snps))
-actual.fdp <- length(indirect.good) / length(disc.obj$discoveries)
-
-# W <- c()
-# for (config in wanted.plots) {
-#   W = rbind(W, stat.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = config$penalty, mode = config$mode))
-# }
-
-#pdf("figures/combinedW_aggregated.pdf")
-#  par(cex.main = 1.2, cex.lab = 1.2)
-#  par(mar = c(5.1, 5.1, 3.1, 2.1))
-#  ncases <- ceiling(length(wanted.plots)/2)*2
-#  layout(matrix(1:ncases, ncol = 2, byrow = T))
-#  for (i in 1:length(wanted.plots)) {
-#    t = knockoff.threshold(W[i, ]$W, offset = 0, fdr = .15)
-#    plot.discoveries(W[i, ]$W, t = t,
-                   #main = penalty.names[[wanted.plots[[i]]$penalty]], 
-#                   ylim = c(-.3, .2))
-#  }
-#dev.off()
+# indirect.good <- intersect(names(disc.obj$discoveries), names(active.genes.snps))
+# actual.fdp <- length(indirect.good) / length(disc.obj$discoveries)
