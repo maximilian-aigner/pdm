@@ -1,4 +1,6 @@
 library(knockoff)
+library(glmnet)
+library(SGL)
 library(caret, warn.conflicts = FALSE)
 
 stat.combined <- function(X, X_k, y, combination_function, ret.copy = FALSE) {
@@ -102,6 +104,30 @@ stat.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode 
   orig = 2:(p + 1)
   W = abs(Z[orig]) - abs(Z[p + orig])
   return(list(W = W, selection.losses = selection.losses))
+}
+
+stat.sparse_group_lasso <- function(X, X_k, y, groups, intercept = TRUE, mode = "best", ...) {
+  data <- list(
+    x = if (intercept) model.matrix(y ~ X + X_k) else model.matrix(y ~ X + X_k - 1),
+    y = y
+  )
+  sgl.cv.fit <- cvSGL(data, type = "logit", index = groups,
+               nlam = 100, standardize = FALSE, alpha = 1, ...)
+  if (mode == "best") {
+    least.lambda.index <- which.min(sgl.cv.fit$lldiff)
+    Z <- sgl.cv.fit$fit$beta[, least.lambda.index]
+  } else {
+    # assume a vector of nnzs
+    nnzs <- colSums(sgl.cv.fit$fit$beta != 0)
+    nnz.indices <- match(mode, nnzs)
+    nnz.indices <- nnz.indices[!is.na(nnz.indices)]
+    least.lambda.index <- which.min(sgl.cv.fit$lldiff[nnz.indices])
+    Z <- sgl.cv.fit$fit$beta[, nnz.indices[least.lambda.index]]
+  }
+  p <- dim(X)[2]
+  orig <- 2:(p + 1)
+  W <- abs(Z[orig]) - abs(Z[p + orig])
+  return(list(W = W, selection.losses = sgl.cv.fit$lldiff))
 }
 
 stat.xgboost <- function(X, X_k, y, n.cv = 4) {
