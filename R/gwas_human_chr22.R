@@ -53,11 +53,18 @@ total.groups <- as.factor(total.groups)
 
 wanted.plots <- list(
   list(
+    f = stat.group_logit_lasso,
     penalty = "cMCP",
     mode = "best"
   ),
   list(
+    f = stat.group_logit_lasso,
     penalty = "cMCP",
+    mode = 1:20
+  ),
+  list(
+    f = stat.sparse_group_lasso,
+    penalty = NULL,
     mode = 1:20
   )
 )
@@ -65,7 +72,14 @@ wanted.plots <- list(
 W <- c()
 for (config in wanted.plots) {
   cat("[plotting] (", config$penalty, ", ", config$mode, ")\n")
-  W = rbind(W, stat.group_logit_lasso(X, Xk, phenotypes, total.groups, penalty = config$penalty, mode = config$mode)$W)
+  output <- do.call(
+    config$f, 
+    list(X = X, X_k = Xk,
+         y = phenotypes, groups = total.groups,
+         penalty = config$penalty, mode = config$mode
+         )
+  )
+  W = rbind(W, output$W)
 }
 
 pdf("figures/cluster_bilevelselection.pdf")

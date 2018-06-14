@@ -106,7 +106,7 @@ stat.group_logit_lasso <- function(X, X_k, y, groups, penalty = "grLasso", mode 
   return(list(W = W, selection.losses = selection.losses))
 }
 
-stat.sparse_group_lasso <- function(X, X_k, y, groups, intercept = TRUE, mode = "best", ...) {
+stat.sparse_group_lasso <- function(X, X_k, y, groups, intercept = TRUE, mode = "best", penalty = NULL, ...) {
   data <- list(
     x = if (intercept) model.matrix(y ~ X + X_k) else model.matrix(y ~ X + X_k - 1),
     y = y
