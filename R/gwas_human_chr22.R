@@ -61,11 +61,6 @@ wanted.plots <- list(
     f = stat.group_logit_lasso,
     penalty = "cMCP",
     mode = 1:20
-  ),
-  list(
-    f = stat.sparse_group_lasso,
-    penalty = NULL,
-    mode = 1:20
   )
 )
 
