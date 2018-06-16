@@ -8,10 +8,10 @@ stat.combined <- function(X, X_k, y, combination_function, ret.copy = FALSE) {
   # out <- rbind(out, stat.random_forest(X, X_k, y))
   # out <- rbind(out, stat.stability_selection(X, X_k, y))
   # out <- rbind(out, stat.sqrt_lasso(X, X_k, y))
-  out <- rbind(out, stat.glmnet_coefdiff(X, X_k, y)) # lasso
-  out <- rbind(out, stat.glmnet_lambdadiff(X, X_k, y)) # diff of lambdas
-  out <- rbind(out, stat.glmnet_coefdiff(X, X_k, y, alpha = 0)) # ridge
-  out <- rbind(out, stat.xgboost(X, X_k, y))
+  out <- rbind(out, stat.glmnet_coefdiff(X, X_k, y, family = "binomial")) # lasso
+  out <- rbind(out, stat.glmnet_lambdadiff(X, X_k, y, family = "binomial")) # diff of lambdas
+  out <- rbind(out, stat.glmnet_coefdiff(X, X_k, y, family = "binomial", alpha = 0)) # ridge
+  out <- rbind(out, stat.xgboost(X, X_k, y, n.cv = 2))
   if (ret.copy)
     return(list(Wmat = out, combined = combination_function(out)))
   return(combination_function(out))
@@ -141,10 +141,10 @@ stat.xgboost <- function(X, X_k, y, n.cv = 4) {
   )
   xgb.grid <- expand.grid(
     nrounds = c(350),
-    max_depth = c(4, 6),
-    eta = c(0.05, 0.1),
+    max_depth = c(6),
+    eta = c(0.05),
     gamma = c(0.01),
-    colsample_bytree = c(0.5, 0.75, 0.9),
+    colsample_bytree = c(0.5, 0.75),
     subsample = c(0.5),
     min_child_weight = c(0)
   )
