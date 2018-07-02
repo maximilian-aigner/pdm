@@ -17,15 +17,15 @@ stat.combined <- function(X, X_k, y, combination_function, ret.copy = FALSE) {
   return(combination_function(out))
 }
 
-stat.combined.groups <- function(X, X_k, y, groups, combination_function, ret.copy = FALSE, ...) {
+stat.combined.groups <- function(X, X_k, y, groups, combination_function = combine.weighted, ret.copy = FALSE, ...) {
   out <- c()
   out <- rbind(out, stat.glmnet_coefdiff(X, X_k, y))
-  out <- rbind(out, stat.group_logit_lasso(X, X_k, y, groups, penalty = "cMCP", ...)$W)
+  out <- rbind(out, stat.group_logit_lasso(X, X_k, y, groups, penalty = "cMCP", mode = 1:20)$W)
   # out <- rbind(out, stat.group_logit_lasso(X, X_k, y, groups, penalty = "cMCP")$W)
   out <- rbind(out, stat.xgboost(X, X_k, y, n.cv = 2))
   if (ret.copy)
     return(list(Wmat = out, combined = combination_function(out)))
-  return(combination_function(out))
+  return(list(W=combination_function(out)))
 }
 
 combine.max <- function(Wmat) {
@@ -51,7 +51,7 @@ combine.weighted <- function(Wmat, type = "sum", weights = "sd") {
   else if (type == "mean")
     Wfinal <- colMeans(weights*Wmat)
   return(list(
-    Wfinal = Wfinal,
+    W = Wfinal,
     weights = weights,
     correlation = cor(t(Wmat))
   ));
