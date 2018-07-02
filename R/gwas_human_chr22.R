@@ -26,9 +26,10 @@ if (!file.exists('./preload/saveX.rda')) {
 
 if (!file.exists('./preload/savegroups.rda')) {
   # Generate groups by clustering
-  grouping.obj <- grouping.clusters(X)
-  groups <- grouping.obj$clusters
-  X <- grouping.obj$Xmod
+  # grouping.obj <- grouping.clusters(X)
+  # groups <- grouping.obj$clusters
+  # X <- grouping.obj$Xmod
+  groups <- grouping.annotations(X)
   
   save(X, groups, file = './preload/savegroups.rda')
 } else {
@@ -63,6 +64,7 @@ wanted.plots <- list(
     mode = 1:20
   )
 )
+ncases <- length(wanted.plots)
 
 W <- c()
 for (config in wanted.plots) {
@@ -74,18 +76,23 @@ for (config in wanted.plots) {
          penalty = config$penalty, mode = config$mode
          )
   )
-  W = rbind(W, output$W)
+  W <- rbind(W, output$W)
 }
 
-pdf("figures/cluster_bilevelselection.pdf")
+titles <- c("cMCP-CV", "cMCP-MPNZ", "combined")
+W <- rbind(W, stat.combined.groups(X, Xk, phenotypes, total.groups, combine.prod)$Wfinal)
+ncases <- ncases + 1
+jpeg("figures/poster_cluster.jpg", width = 1440,
+     height = 1260, pointsize = 40)
  par(cex.main = 1.2, cex.lab = 1.2)
  par(mar = c(5.1, 5.1, 3.1, 2.1))
- ncases <- ceiling(length(wanted.plots)/2)*2
+ # ncases <- length(wanted.plots)
  layout(matrix(1:ncases, ncol = 1, byrow = T))
- for (i in 1:length(wanted.plots)) {
+ for (i in 1:ncases) {
    t = knockoff.threshold(W[i, ], offset = 0, fdr = .15)
    plot.discoveries(W[i, ], t = t,
-                  ylim = c(-1, 2))
+                  ylim = c(-1, 2),
+                  main = titles[i])
  }
 dev.off()
 

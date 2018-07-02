@@ -37,7 +37,7 @@ combine.prod <- function(Wmat) {
   W <- apply(Wmat, 2, prod)
 }
 
-combine.weighted <- function(Wmat, type = "sum", weights = "sd") {
+combine.weighted <- function(Wmat, type = "mean", weights = "var") {
   if (weights == "sd")
     weights <- 1.0/apply(Wmat, 1, stats::sd)
   else if (weights == "range")
