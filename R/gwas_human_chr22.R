@@ -26,10 +26,9 @@ if (!file.exists('./preload/saveX.rda')) {
 
 if (!file.exists('./preload/savegroups.rda')) {
   # Generate groups by clustering
-  # grouping.obj <- grouping.clusters(X)
-  # groups <- grouping.obj$clusters
-  # X <- grouping.obj$Xmod
-  groups <- grouping.annotations(X)
+  grouping.obj <- grouping.clusters(X)
+  groups <- grouping.obj$clusters
+  X <- grouping.obj$Xmod
   
   save(X, groups, file = './preload/savegroups.rda')
 } else {
@@ -62,11 +61,6 @@ wanted.plots <- list(
     f = stat.group_logit_lasso,
     penalty = "cMCP",
     mode = 1:20
-  ),
-  list(
-    f = stat.combined.groups,
-    penalty = NULL,
-    mode = NULL
   )
 )
 
@@ -80,24 +74,22 @@ for (config in wanted.plots) {
          penalty = config$penalty, mode = config$mode
          )
   )
-  W = rbind(W, as.numeric(output$W))
+  W = rbind(W, output$W)
 }
 
-jpeg("figures/poster_annotation_bilevelselection.jpg", height=1440, width=945, pointsize=40, quality=100)
+pdf("figures/cluster_bilevelselection.pdf")
  par(cex.main = 1.2, cex.lab = 1.2)
  par(mar = c(5.1, 5.1, 3.1, 2.1))
- ncases <- length(wanted.plots)
- # ncases <- ceiling(length(wanted.plots)/2)*2
- titles<-c("cMCP-CV", "cMCP-MPNZ", "weighted mean")
+ ncases <- ceiling(length(wanted.plots)/2)*2
  layout(matrix(1:ncases, ncol = 1, byrow = T))
  for (i in 1:length(wanted.plots)) {
    t = knockoff.threshold(W[i, ], offset = 0, fdr = .15)
    plot.discoveries(W[i, ], t = t,
-                  ylim = c(-1, 2), main = titles[i])
+                  ylim = c(-1, 2))
  }
 dev.off()
 
-  # Compare to true active set
+# Compare to true active set
 active <- read.table('~/src/pdm/datasim/working_dataset/active_genes.txt',
                      stringsAsFactors = FALSE, header = TRUE, sep = ' ')
 active.genes <- unique(active$GENESYMBOL)
