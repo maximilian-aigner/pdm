@@ -82,8 +82,8 @@ for (config in wanted.plots) {
 titles <- c("cMCP-CV", "cMCP-MPNZ", "combined")
 W <- rbind(W, stat.combined(X, Xk, phenotypes, combine.weighted)$Wfinal)
 ncases <- ncases + 1
-jpeg("figures/poster_cluster.jpg", width = 1440,
-     height = 1260, pointsize = 30)
+jpeg("figures/poster_cluster.jpg", width = 1260,
+     height = 1260, pointsize = 40)
  par(cex.main = 1.2, cex.lab = 1.2)
  par(mar = c(5.1, 5.1, 3.1, 2.1))
  # ncases <- length(wanted.plots)
