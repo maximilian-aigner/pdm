@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-set.seed(43196)
+set.seed(43193)
 args = commandArgs(trailingOnly = TRUE)
 # choose 'causal' gene loci
 k = 10

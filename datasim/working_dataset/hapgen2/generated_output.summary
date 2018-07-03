@@ -5,7 +5,7 @@
 ===================================================================
 
 Command line input is:
-./hapgen2 -m HM3/genetic_map_chr22_combined_b36.txt -l HM3/CEU.chr22.legend -h HM3/CEU.chr22.hap -o working_dataset/hapgen2/generated_output -n 300 450 -int 14550436 33188619 -dl 33106016 0 1.377 2.6308 33096704 0 1.4855 2.8929 33136552 1 1.4791 2.9694 33127663 1 1.4239 2.8293 33160590 0 1.4962 2.7646 33106008 0 1.2772 2.7509 33173891 0 1.2968 2.6784 17277228 0 1.434 2.8799 32957141 0 1.308 2.576 17303383 0 1.2832 2.7032 
+./hapgen2 -m HM3/genetic_map_chr22_combined_b36.txt -l HM3/CEU.chr22.legend -h HM3/CEU.chr22.hap -o working_dataset/hapgen2/generated_output -n 300 450 -int 14550436 33188619 -dl 19471734 1 1.448 2.8497 19497787 1 1.3974 2.8498 19499875 0 1.493 2.8847 19495675 1 1.4167 2.8434 29951792 0 1.4965 2.8372 19475465 0 1.3149 2.7482 29977094 0 1.4495 2.7113 19471434 1 1.4479 2.8502 29976448 0 1.3407 2.5915 19504444 0 1.4935 2.7773 
 
 FILE INPUTS
                                             haplotype file: HM3/CEU.chr22.hap
@@ -18,9 +18,9 @@ FILE OUTPUTS
 PARAMETER INPUTS
                                   no. controls to simulate: 300
                                      no. cases to simulate: 450
-                                              disease loci: (1) 17277228 (2) 17303383 (3) 32957141 (4) 33096704 (5) 33106008 (6) 33106016 (7) 33127663 (8) 33136552 (9) 33160590 (10) 33173891 
-                                           disease alleles: (1) 0 (2) 0 (3) 0 (4) 0 (5) 0 (6) 0 (7) 1 (8) 1 (9) 0 (10) 0 
-                             heterozygote/homozygote risks: (1) 1.43/2.88 (2) 1.28/2.70 (3) 1.31/2.58 (4) 1.49/2.89 (5) 1.28/2.75 (6) 1.38/2.63 (7) 1.42/2.83 (8) 1.48/2.97 (9) 1.50/2.76 (10) 1.30/2.68 
+                                              disease loci: (1) 19471434 (2) 19471734 (3) 19475465 (4) 19495675 (5) 19497787 (6) 19499875 (7) 19504444 (8) 29951792 (9) 29976448 (10) 29977094 
+                                           disease alleles: (1) 1 (2) 1 (3) 0 (4) 1 (5) 1 (6) 0 (7) 0 (8) 0 (9) 0 (10) 0 
+                             heterozygote/homozygote risks: (1) 1.45/2.85 (2) 1.45/2.85 (3) 1.31/2.75 (4) 1.42/2.84 (5) 1.40/2.85 (6) 1.49/2.88 (7) 1.49/2.78 (8) 1.50/2.84 (9) 1.34/2.59 (10) 1.45/2.71 
                                                      lower: 14550436
                                                      upper: 33188619
                                                         Ne: 11418
@@ -36,12 +36,10 @@ Reading haplotype and legend files: looking for SNPs in [14550436, 33188619] ...
                                 number of SNPs in interval: 10000
 
 
-Random seed set to 0.890443
+Random seed set to 0.0664042
 theta not set, so setting to a default value of 0.165709
 
-Processing disease loci ... 
-snp at position 3.30967e+07 has frequency 0, so it has been removed from the set of disease loci.
-done 
+Processing disease loci ... done 
 
 
 Simulating haplotypes ... done
@@ -59,27 +57,29 @@ writing output file working_dataset/hapgen2/generated_output.cases.sample
 The pvalues and effect sizes of each disease SNP is:
 
 Disease_locus_index           beta        beta_se         pvalue
-            997             -1.111         0.1146      7.993e-16
-           1015            -0.6817         0.1094      1.187e-07
-           9836            -0.6466        0.08888      3.979e-08
-           9931            -0.3967        0.06009       0.000118
-           9932             -1.198         0.4047       0.002418
-           9950              0.562        0.06244      6.907e-08
-           9959             0.4631         0.1576       0.005359
-           9977            -0.5436         0.3338         0.1127
-           9988             -1.107         0.1802      5.055e-09
+           2163             0.6709         0.1374      4.143e-06
+           2164             0.6709         0.1374      4.143e-06
+           2166             -0.409        0.08435      0.0001925
+           2180            -0.1304         0.0571         0.1931
+           2182             -0.044        0.05487         0.6672
+           2184            -0.1091        0.05806         0.2778
+           2187            -0.7584         0.2561       0.003905
+           7835            -0.4204         0.1412       0.008945
+           7843            -0.5306         0.1901        0.01013
+           7844            -0.5138        0.09752      2.965e-05
 
 
-The pvalue for the full disease model is 2.385e-44:
+The pvalue for the full disease model is 1.192e-12:
 Disease_locus_index           beta        beta_se
-            997            -0.9917         0.1258
-           1015              -0.45         0.1242
-           9836             -0.803         0.1019
-           9931            -0.7445        0.06935
-           9932              -1.91         0.4596
-           9950             0.9152        0.07217
-           9959             0.8646         0.1922
-           9977            -0.2237         0.4072
-           9988             -1.548         0.1969
+           2163             0.8481         0.1444
+           2164                  0         0.1444
+           2166            -0.4654        0.08721
+           2180            -0.1102        0.05989
+           2182             0.5338        0.05766
+           2184            0.08221        0.06091
+           2187            -0.4181         0.2608
+           7835            -0.4583          0.148
+           7843            -0.6662         0.1986
+           7844             -0.605         0.1011
 
-HAPGEN took 115 seconds to complete. Have a nice day! 
+HAPGEN took 14 seconds to complete. Have a nice day! 

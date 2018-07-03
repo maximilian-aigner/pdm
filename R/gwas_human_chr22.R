@@ -10,7 +10,7 @@ source('./R/grouping.R')
 source('./R/qc.R')
 source('./R/import_data.R')
 
-set.seed(43192)
+# set.seed(43192)
 
 if (!file.exists('./preload/saveX.rda')) {
   # Re-do data import step
