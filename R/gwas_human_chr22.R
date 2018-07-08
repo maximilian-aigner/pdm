@@ -26,10 +26,10 @@ if (!file.exists('./preload/saveX.rda')) {
 
 if (!file.exists('./preload/savegroups.rda')) {
   # Generate groups by clustering
-  # grouping.obj <- grouping.clusters(X)
-  # groups <- grouping.obj$clusters
-  # X <- grouping.obj$Xmod
-  groups <- grouping.annotations(X)
+  grouping.obj <- grouping.clusters(X)
+  groups <- grouping.obj$clusters
+  X <- grouping.obj$Xmod
+  # groups <- grouping.annotations(X)
   
   save(X, groups, file = './preload/savegroups.rda')
 } else {
@@ -56,46 +56,44 @@ wanted.plots <- list(
   list(
     f = stat.group_logit_lasso,
     penalty = "cMCP",
-    mode = "best"
-  ),
-  list(
-    f = stat.group_logit_lasso,
-    penalty = "cMCP",
     mode = 1:20
   )
 )
 ncases <- length(wanted.plots)
 
-W <- c()
-for (config in wanted.plots) {
-  cat("[plotting] (", config$penalty, ", ", config$mode, ")\n")
-  output <- do.call(
-    config$f, 
-    list(X = X, X_k = Xk,
-         y = phenotypes, groups = total.groups,
-         penalty = config$penalty, mode = config$mode
-         )
-  )
-  W <- rbind(W, output$W)
-}
+# W <- c()
+# for (config in wanted.plots) {
+#   cat("[plotting] (", config$penalty, ", ", config$mode, ")\n")
+#   output <- do.call(
+#     config$f, 
+#     list(X = X, X_k = Xk,
+#          y = phenotypes, groups = total.groups,
+#          penalty = config$penalty, mode = config$mode
+#          )
+#   )
+#   W <- rbind(W, output$W)
+# }
+W <- stat.group_logit_lasso(X, Xk, phenotypes, total.groups,
+                            penalty = "cMCP", mode = 1:20)
+disc.obj <- plot.discoveries(W, knockoff.threshold(W, offset = 0, fdr = .15))
 
-titles <- c("cMCP-CV", "cMCP-MPNZ", "Combined")
-W <- rbind(W, stat.combined(X, Xk, phenotypes, combine.weighted)$Wfinal)
-ncases <- ncases + 1
-pdf("figures/slides_annotation_bilevel.pdf")#, width = 1440,
-     #height = 1260, pointsize = 30)
- par(cex.main = 1, cex.lab = 1)
- par(mar = c(2, 2, 1.5, 1))
- # ncases <- length(wanted.plots)
- #layout(matrix(1:ncases, nrow = 2, byrow = FALSE))
- layout(matrix(c(1,2,3,3), nrow = 2, byrow = TRUE))
- for (i in 1:ncases) {
-   t = knockoff.threshold(W[i, ], offset = 0, fdr = .15)
-   plot.discoveries(W[i, ], t = t,
-                  ylim = c(-1, 2),
-                  main = titles[i])
- }
-dev.off()
+# titles <- c("cMCP-CV", "cMCP-MPNZ", "Combined")
+# W <- rbind(W, stat.combined(X, Xk, phenotypes, combine.weighted)$Wfinal)
+# ncases <- ncases + 1
+# pdf("figures/slides_annotation_bilevel.pdf")#, width = 1440,
+#      #height = 1260, pointsize = 30)
+#  par(cex.main = 1, cex.lab = 1)
+#  par(mar = c(2, 2, 1.5, 1))
+#  # ncases <- length(wanted.plots)
+#  #layout(matrix(1:ncases, nrow = 2, byrow = FALSE))
+#  layout(matrix(c(1,2,3,3), nrow = 2, byrow = TRUE))
+#  for (i in 1:ncases) {
+#    t = knockoff.threshold(W[i, ], offset = 0, fdr = .15)
+#    plot.discoveries(W[i, ], t = t,
+#                   ylim = c(-1, 2),
+#                   main = titles[i])
+#  }
+# dev.off()
 
 # Compare to true active set
 active <- read.table('~/src/pdm/datasim/working_dataset/active_genes.txt',
@@ -104,5 +102,5 @@ active.genes <- unique(active$GENESYMBOL)
 active.genes.snps <- which(groups %in% active.genes)
 names(active.genes.snps) <- names(groups[active.genes.snps])
 
-# indirect.good <- intersect(names(disc.obj$discoveries), names(active.genes.snps))
-# actual.fdp <- length(indirect.good) / length(disc.obj$discoveries)
+indirect.good <- intersect(names(disc.obj$discoveries), names(active.genes.snps))
+actual.fdp <- length(indirect.good) / length(disc.obj$discoveries)
