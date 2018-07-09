@@ -73,9 +73,10 @@ ncases <- length(wanted.plots)
 #   )
 #   W <- rbind(W, output$W)
 # }
-W <- stat.group_logit_lasso(X, Xk, phenotypes, total.groups,
+Wobj <- stat.group_logit_lasso(X, Xk, phenotypes, total.groups,
                             penalty = "cMCP", mode = 1:20)
-disc.obj <- plot.discoveries(W, knockoff.threshold(W, offset = 0, fdr = .15))
+plot(Wobj$selection.losses$lambda, Wobj$selection.losses$loss, type = 'l')
+disc.obj <- plot.discoveries(Wobj$W, knockoff.threshold(Wobj$W, offset = 0, fdr = .15))
 
 # titles <- c("cMCP-CV", "cMCP-MPNZ", "Combined")
 # W <- rbind(W, stat.combined(X, Xk, phenotypes, combine.weighted)$Wfinal)
@@ -98,9 +99,13 @@ disc.obj <- plot.discoveries(W, knockoff.threshold(W, offset = 0, fdr = .15))
 # Compare to true active set
 active <- read.table('~/src/pdm/datasim/working_dataset/active_genes.txt',
                      stringsAsFactors = FALSE, header = TRUE, sep = ' ')
-active.genes <- unique(active$GENESYMBOL)
-active.genes.snps <- which(groups %in% active.genes)
-names(active.genes.snps) <- names(groups[active.genes.snps])
+disc.are.true <- names(disc.obj$discoveries) %in% active$rs
+tdp <- sum(disc.are.true) / length(disc.obj$discoveries)
+fdp <- 1 - tdp
+lost.in.qc <- sum(is.na(groups[active$rs]))
+#active.genes <- unique(active$GENESYMBOL)
+#active.genes.snps <- which(names(groups) %in% active.genes)
+#names(active.genes.snps) <- names(groups[active.genes.snps])
 
-indirect.good <- intersect(names(disc.obj$discoveries), names(active.genes.snps))
-actual.fdp <- length(indirect.good) / length(disc.obj$discoveries)
+#indirect.good <- intersect(names(disc.obj$discoveries), names(active.genes.snps))
+#actual.fdp <- length(indirect.good) / length(disc.obj$discoveries)
